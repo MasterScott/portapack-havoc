@@ -440,7 +440,7 @@ SystemMenuView::SystemMenuView(NavigationView& nav) {
 		{ "Options", 	ui::Color::cyan(),			&bitmap_icon_setup,	  	[&nav](){ nav.push<SettingsMenuView>(); } },
 		{ "Debug",		ui::Color::light_grey(),		&bitmap_icon_debug,   				[&nav](){ nav.push<DebugMenuView>(); } },
 		{ "HackRF", 	ui::Color::cyan(),			&bitmap_icon_hackrf,	[this, &nav](){ hackrf_mode(nav); } },
-		//{ "About", 		ui::Color::cyan(),			nullptr,				[&nav](){ nav.push<AboutView>(); } }
+		{ "About", 		ui::Color::cyan(),			nullptr,				[&nav](){ nav.push<AboutView>(); } }
 	});
 	set_max_rows(2); // allow wider buttons
 	//set_highlighted(1);		// Startup selection
