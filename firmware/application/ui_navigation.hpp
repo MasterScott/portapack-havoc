@@ -54,6 +54,8 @@ enum modal_t {
 	ABORT
 };
 
+//#define VERSION_STRING "v1.0.0"; // TODO: Move somewhere else
+
 class NavigationView : public View {
 public:
 	std::function<void(const View&)> on_view_changed { };
@@ -109,7 +111,7 @@ public:
 	void set_title(const std::string new_value);
 
 private:
-	static constexpr auto default_title = "PortaPack|Havoc";
+	static constexpr auto default_title = "MAYHEM v1.0.0"; // TODO: Move the version somewhere
 	
 	NavigationView& nav_;
 
@@ -249,7 +251,7 @@ private:
 	Context& context_;
 };
 
-class NotImplementedView : public View {
+/*class NotImplementedView : public View {
 public:
 	NotImplementedView(NavigationView& nav);
 
@@ -265,7 +267,7 @@ private:
 		{ 10 * 8, 13 * 16, 10 * 8, 24 },
 		"Bummer",
 	};
-};
+};*/
 
 class ModalMessageView : public View {
 public:
