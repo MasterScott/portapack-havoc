@@ -69,6 +69,7 @@ inline void disable() {
 #endif
 
 #if defined(LPC43XX_M4)
+#undef assert
 inline void assert() {
 	__SEV();
 }
@@ -93,6 +94,7 @@ inline void disable() {
 #endif
 
 #if defined(LPC43XX_M0)
+#undef assert
 inline void assert() {
 	__SEV();
 }
