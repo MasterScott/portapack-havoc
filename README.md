@@ -57,7 +57,7 @@ As its name implies, HAVOC's functions can be fun, mean or even useful sometimes
 
 Feature | Progress | Notes
 ------- | -------- | -----
-POCSAG RX   | 95% | Needs support for numeric messages
+POCSAG RX   | 95% | Needs support for numeric messages
 Morse TX    | 95% | Needs fox hunt scheduler and live keying mode
 Mic. TX     | 95% | Carrier leak bug, need to find guard tones for various brands of wireless mics
 ADS-B RX    | 90% | Needs angle and speed decoding
