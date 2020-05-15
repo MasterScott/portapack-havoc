@@ -251,6 +251,28 @@ static constexpr Bitmap bitmap_icon_biast_on {
 	{ 16, 16 }, bitmap_icon_biast_on_data
 };
 
+static constexpr uint8_t bitmap_gps_sim_data[] = {
+	0x00, 0x00, 
+	0x00, 0x00, 
+	0x00, 0x00, 
+	0xF0, 0x0F, 
+	0x4C, 0x32, 
+	0xFE, 0x7F, 
+	0x25, 0xA4, 
+	0x25, 0xA4, 
+	0xFF, 0xFF, 
+	0x25, 0xA4, 
+	0x25, 0xA4, 
+	0xFE, 0x7F, 
+	0x4C, 0x32, 
+	0xF0, 0x0F, 
+	0x00, 0x00, 
+	0x00, 0x00, 
+};
+static constexpr Bitmap bitmap_gps_sim {
+	{ 16, 16 }, bitmap_gps_sim_data
+};
+
 static constexpr uint8_t bitmap_icon_btle_data[] = {
 	0xE0, 0x03, 
 	0x30, 0x07, 
@@ -603,6 +625,28 @@ static constexpr Bitmap bitmap_icon_file_text {
 	{ 16, 16 }, bitmap_icon_file_text_data
 };
 
+static constexpr uint8_t bitmap_icon_playdead_data[] = {
+	0x80, 0x01, 
+	0x80, 0x01, 
+	0xE0, 0x07, 
+	0xE0, 0x07, 
+	0x80, 0x01, 
+	0x80, 0x01, 
+	0x80, 0x01, 
+	0xE0, 0x07, 
+	0xB0, 0x0A, 
+	0x50, 0x0D, 
+	0xA8, 0x1A, 
+	0x58, 0x15, 
+	0xAC, 0x2A, 
+	0x54, 0x35, 
+	0x04, 0x20, 
+	0xF8, 0x1F, 
+};
+static constexpr Bitmap bitmap_icon_playdead {
+	{ 16, 16 }, bitmap_icon_playdead_data
+};
+
 static constexpr uint8_t bitmap_icon_fox_data[] = {
 	0x18, 0x18, 
 	0x28, 0x14, 
@@ -624,6 +668,7 @@ static constexpr uint8_t bitmap_icon_fox_data[] = {
 static constexpr Bitmap bitmap_icon_fox {
 	{ 16, 16 }, bitmap_icon_fox_data
 };
+
 
 static constexpr uint8_t bitmap_icon_freqman_data[] = {
 	0x00, 0x00, 
@@ -1087,6 +1132,28 @@ static constexpr Bitmap bitmap_icon_scanner {
 	{ 16, 16 }, bitmap_icon_scanner_data
 };
 
+static constexpr uint8_t bitmap_icon_closecall_data[] = {
+	0x00, 0x00, 
+	0x00, 0x10, 
+	0x00, 0x38, 
+	0x00, 0x7C, 
+	0x00, 0x00, 
+	0x3E, 0x00, 
+	0xE3, 0x00, 
+	0x80, 0x01, 
+	0x1C, 0x03, 
+	0x22, 0x02, 
+	0x41, 0x06, 
+	0x88, 0x04, 
+	0x9C, 0x04, 
+	0x88, 0x04, 
+	0x41, 0x06, 
+	0x22, 0x02, 
+};
+static constexpr Bitmap bitmap_icon_closecall {
+	{ 16, 16 }, bitmap_icon_closecall_data
+};
+
 static constexpr uint8_t bitmap_icon_script_data[] = {
 	0xFC, 0x07, 
 	0xFA, 0x0F, 
@@ -1262,6 +1329,7 @@ static constexpr uint8_t bitmap_icon_speaker_data[] = {
 static constexpr Bitmap bitmap_icon_speaker {
 	{ 16, 16 }, bitmap_icon_speaker_data
 };
+
 
 static constexpr uint8_t bitmap_icon_sstv_data[] = {
 	0x10, 0x08, 

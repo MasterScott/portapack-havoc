@@ -49,7 +49,7 @@
 #include "ui_mictx.hpp"
 #include "ui_morse.hpp"
 //#include "ui_numbers.hpp"
-//#include "ui_nuoptix.hpp"
+#include "ui_nuoptix.hpp"
 #include "ui_playdead.hpp"
 #include "ui_pocsag_tx.hpp"
 #include "ui_rds.hpp"

@@ -235,7 +235,7 @@ set(CPPSRC
 	apps/ui_mictx.cpp
 	apps/ui_modemsetup.cpp
 	apps/ui_morse.cpp
-	# apps/ui_nuoptix.cpp
+	apps/ui_nuoptix.cpp
 	apps/ui_pocsag_tx.cpp
 	apps/ui_rds.cpp
 	apps/ui_remote.cpp

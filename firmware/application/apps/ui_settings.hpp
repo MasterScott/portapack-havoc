@@ -194,11 +194,11 @@ public:
 	std::string title() const override { return "UI settings"; };
 	
 private:
-	/*Checkbox checkbox_login {
+	Checkbox checkbox_login {
 		{ 3 * 8, 2 * 16 },
 		20,
 		"Login with play dead"
-	};*/
+	};
 	
 	Checkbox checkbox_bloff {
 		{ 3 * 8, 5 * 16 },
@@ -259,7 +259,7 @@ private:
 	};
 };
 
-/*
+
 class SetPlayDeadView : public View {
 public:
 	SetPlayDeadView(NavigationView& nav);
@@ -287,7 +287,7 @@ private:
 		{ 128, 192, 96, 24 },
 		"Cancel"
 	};
-};*/
+};
 
 /*class ModInfoView : public View {
 public:
