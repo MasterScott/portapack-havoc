@@ -93,6 +93,35 @@ bool get_antenna_bias() {
 	return antenna_bias;
 }
 
+bool speaker_mode { false };
+void set_speaker_mode(const bool v) {
+	speaker_mode = v;
+	if (speaker_mode)
+	{
+		audio::output::speaker_unmute();
+	}
+	else
+	{
+		audio::output::speaker_mute();
+	}
+}
+
+bool microphone_mode { false };
+void set_microphone_mode(const bool v) {
+	microphone_mode = v;
+	if (microphone_mode)
+	{
+		audio::input::internal_stop();
+		audio::input::start();
+	}
+	else
+	{
+		audio::input::stop();
+		audio::input::internal_start();
+	}
+}
+
+
 static constexpr uint32_t systick_count(const uint32_t clock_source_f) {
 	return clock_source_f / CH_FREQUENCY;
 }

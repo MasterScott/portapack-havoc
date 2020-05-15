@@ -210,7 +210,7 @@ MicTXView::MicTXView(
 	set_tx(false);
 	
 	audio::set_rate(audio::Rate::Hz_24000);
-	audio::input::start();
+	//audio::input::start();
 }
 
 MicTXView::~MicTXView() {

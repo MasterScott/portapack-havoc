@@ -399,12 +399,14 @@ public:
 class CodedSquelchMessage : public Message {
 public:
 	constexpr CodedSquelchMessage(
+		const bool enabled,
 		const uint32_t value
 	) : Message { ID::CodedSquelch },
+		enabled { enabled },
 		value { value }
 	{
 	}
-	
+	bool enabled;
 	uint32_t value;
 };
 
@@ -737,7 +739,8 @@ public:
 		trigger_value(trigger_value),
 		trigger_word(trigger_word)
 	{
-    }
+	}
+	
 	const uint32_t baudrate;
 	const uint32_t word_length;
 	const uint32_t trigger_value;
@@ -757,7 +760,8 @@ public:
 		trigger_value(trigger_value),
 		trigger_word(trigger_word)
 	{
-    }
+	}
+	
 	const uint32_t baudrate;
 	const uint32_t word_length;
 	const uint32_t trigger_value;

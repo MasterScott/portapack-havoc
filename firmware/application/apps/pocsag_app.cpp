@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2015 Jared Boone, ShareBrained Technology, Inc.
  * Copyright (C) 2016 Furrtek
+ * Copyright (C) 2020 Shao
  *
  * This file is part of PortaPack.
  *
@@ -103,10 +104,11 @@ POCSAGAppView::POCSAGAppView(NavigationView& nav) {
 		on_config_changed(v, options_phase.selected_index_value());
 	};
 	options_bitrate.set_selected_index(1);	// 1200bps
-	
+
 	options_phase.on_change = [this](size_t, OptionsField::value_t v) {
 		on_config_changed(options_bitrate.selected_index_value(),v);
 	};
+
 	check_ignore.set_value(ignore);
 	check_ignore.on_select = [this](Checkbox&, bool v) {
 		ignore = v;

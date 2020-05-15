@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2015 Jared Boone, ShareBrained Technology, Inc.
  * Copyright (C) 2016 Furrtek
+ * Copyright (C) 2020 Shao
  *
  * This file is part of PortaPack.
  *
@@ -71,7 +72,9 @@ bool POCSAGTXView::start_tx() {
 			return false;
 		}
 	}
+
 	MessageType phase = (MessageType)options_phase.selected_index_value();
+
 	
 	pocsag_encode(type, BCH_code, options_function.selected_index_value(), message, address, codewords);
 	
@@ -91,10 +94,14 @@ bool POCSAGTXView::start_tx() {
 	bi = 0;
 	for (i = 0; i < codewords.size(); i++) {
 		if (phase == 0)
+		{
 			codeword = ~(codewords[i]);
+		}
 		else
-		codeword = codewords[i];
-		
+		{
+			codeword = codewords[i];
+		}
+
 		data_ptr[bi++] = (codeword >> 24) & 0xFF;
 		data_ptr[bi++] = (codeword >> 16) & 0xFF;
 		data_ptr[bi++] = (codeword >> 8) & 0xFF;

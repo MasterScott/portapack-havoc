@@ -111,7 +111,7 @@ public:
 	void set_title(const std::string new_value);
 
 private:
-	static constexpr auto default_title = "PortaPack|Havoc";
+	static constexpr auto default_title = "Shao";
 	
 	NavigationView& nav_;
 
@@ -128,8 +128,23 @@ private:
 	};
 
 	Text title {
-		{ 20, 0, 16 * 8, 1 * 16 },
+		{ 20, 0, 12 * 8, 1 * 16 },
 		default_title,
+	};
+
+
+	ImageButton button_microphone {
+		{ 15 * 8, 0, 2 * 8, 1 * 16 },
+		&bitmap_icon_microphone,
+		Color::light_grey(),
+		Color::dark_grey()
+	};
+
+	ImageButton button_speaker {
+		{ 17 * 8, 0, 2 * 8, 1 * 16 },
+		&bitmap_icon_speaker,
+		Color::light_grey(),
+		Color::dark_grey()
 	};
 	
 	ImageButton button_stealth {
@@ -178,6 +193,8 @@ private:
 		{ 28 * 8, 0 * 16,  2 * 8, 1 * 16 }
 	};
 
+	void on_microphone();
+	void on_speaker();
 	void on_stealth();
 	void on_bias_tee();
 	//void on_textentry();

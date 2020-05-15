@@ -3,6 +3,7 @@
  * Copyright (C) 2012-2014 Elias Oenal (multimon-ng@eliasoenal.com)
  * Copyright (C) 2015 Jared Boone, ShareBrained Technology, Inc.
  * Copyright (C) 2016 Furrtek
+ * Copyright (C) 2020 Shao
  *
  * This file is part of PortaPack.
  *
@@ -48,10 +49,13 @@ void POCSAGProcessor::execute(const buffer_c8_t& buffer) {
 		
 		slicer_sr <<= 1;
 		if (phase == 0)
+		{
 			slicer_sr |= (audio_sample < 0);		// Do we need hysteresis ?
+		}
 		else
+		{
 			slicer_sr |= !(audio_sample < 0);
-			
+		}
 		// Detect transitions to adjust clock
 		if ((slicer_sr ^ (slicer_sr >> 1)) & 1) {
 			if (sphase < (0x8000u - sphase_delta_half))

@@ -833,6 +833,9 @@ public:
 	void headphone_enable() override;
 	void headphone_disable() override;
 
+	/*void speaker_enable() override;
+	void speaker_disable() override;*/
+
 	void speaker_enable();
 	void speaker_disable();
 
@@ -841,6 +844,9 @@ public:
 
 	void microphone_enable();
 	void microphone_disable();
+
+	void microphone_internal_enable();
+	void microphone_internal_disable();
 
 	size_t reg_count() const override {
 		return asahi_kasei::ak4951::reg_count;
