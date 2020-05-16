@@ -47,7 +47,7 @@ public:
 
 	void focus() override;
 	
-	std::string title() const override { return "Set Date/Time"; };
+	std::string title() const override { return "Date/Time"; };
 
 private:
 	Labels labels {
@@ -122,7 +122,7 @@ public:
 
 	void focus() override;
 	
-	std::string title() const override { return "Radio settings"; };
+	std::string title() const override { return "Radio"; };
 
 private:
 	const Style style_text {
@@ -191,7 +191,7 @@ public:
 	
 	void focus() override;
 	
-	std::string title() const override { return "UI settings"; };
+	std::string title() const override { return "UI"; };
 	
 private:
 	Checkbox checkbox_login {
@@ -238,7 +238,7 @@ public:
 	
 	void focus() override;
 	
-	std::string title() const override { return "Audio settings"; };
+	std::string title() const override { return "Audio"; };
 	
 private:
 	Labels labels {
@@ -266,7 +266,7 @@ public:
 	
 	void focus() override;
 	
-	std::string title() const override { return "Playdead settings"; };
+	std::string title() const override { return "Play dead"; };
 	
 private:
 	bool entermode = false;

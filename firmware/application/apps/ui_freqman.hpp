@@ -137,7 +137,7 @@ public:
 	FrequencyManagerView(NavigationView& nav);
 	~FrequencyManagerView();
 
-	std::string title() const override { return "Freq. manager"; };
+	std::string title() const override { return "Frequencies"; };
 	
 private:
 	std::string desc_buffer { };
