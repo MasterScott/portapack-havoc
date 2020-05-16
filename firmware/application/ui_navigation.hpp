@@ -111,7 +111,7 @@ public:
 	void set_title(const std::string new_value);
 
 private:
-	static constexpr auto default_title = "PortaPack | Havoc";
+	static constexpr auto default_title = "PortaPack";
 	
 	NavigationView& nav_;
 

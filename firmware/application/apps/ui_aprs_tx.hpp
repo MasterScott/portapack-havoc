@@ -40,7 +40,7 @@ public:
 	
 	void focus() override;
 	
-	std::string title() const override { return "APRS TX (beta)"; };
+	std::string title() const override { return "APRS TX"; };
 
 private:
 	/*enum tx_modes {

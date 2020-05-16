@@ -201,7 +201,7 @@ public:
 	
 	void focus() override;
 	
-	std::string title() const override { return "ADS-B receive"; };
+	std::string title() const override { return "ADS-B RX"; };
 
 private:
 	std::unique_ptr<ADSBLogger> logger { };
