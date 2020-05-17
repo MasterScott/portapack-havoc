@@ -53,7 +53,7 @@
 #include "ui_playdead.hpp"
 #include "ui_pocsag_tx.hpp"
 #include "ui_rds.hpp"
-#include "ui_remote.hpp"
+// #include "ui_remote.hpp"
 #include "ui_scanner.hpp"
 #include "ui_search.hpp"
 #include "ui_sd_wipe.hpp"
@@ -62,7 +62,7 @@
 #include "ui_sonde.hpp"
 #include "ui_sstvtx.hpp"
 //#include "ui_test.hpp"
-#include "ui_tone_search.hpp"
+//#include "ui_tone_search.hpp"
 #include "ui_touchtunes.hpp"
 #include "ui_view_wav.hpp"
 #include "ui_whipcalc.hpp"
@@ -431,7 +431,7 @@ TransmittersMenuView::TransmittersMenuView(NavigationView& nav) {
 		{ "SSTV", 			ui::Color::green(), 	&bitmap_icon_sstv,		[&nav](){ nav.push<SSTVTXView>(); } },
 		{ "TEDI/LCR",		ui::Color::yellow(), 	&bitmap_icon_lcr,		[&nav](){ nav.push<LCRView>(); } },
 		{ "TouchTune",		ui::Color::yellow(),	&bitmap_icon_remote,	[&nav](){ nav.push<TouchTunesView>(); } },
-		{ "Remote",			ui::Color::dark_grey(),	&bitmap_icon_remote,	[&nav](){ nav.push<RemoteView>(); } },
+		// { "Remote",			ui::Color::dark_grey(),	&bitmap_icon_remote,	[&nav](){ nav.push<RemoteView>(); } },
 	});
 }
 
