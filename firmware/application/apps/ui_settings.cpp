@@ -474,11 +474,11 @@ SettingsMenuView::SettingsMenuView(NavigationView& nav) {
 	add_items({
 		//{ "..", 				ui::Color::light_grey(), &bitmap_icon_previous,				[&nav](){ nav.pop(); } },
 		{ "Audio", 			ui::Color::dark_cyan(), &bitmap_icon_speaker,	[&nav](){ nav.push<SetAudioView>(); } },
-		{ "Radio",			ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<SetRadioView>(); } },
-		{ "UI", 			ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<SetUIView>(); } },
+		{ "Radio",			ui::Color::dark_cyan(), &bitmap_icon_cwgen,	[&nav](){ nav.push<SetRadioView>(); } },
+		{ "UI", 			ui::Color::dark_cyan(), &bitmap_icon_pocsag,	[&nav](){ nav.push<SetUIView>(); } },
 		//{ "SD card modules", ui::Color::dark_cyan(), [&nav](){ nav.push<ModInfoView>(); } },
 		{ "Date/Time",		ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<SetDateTimeView>(); } },
-		{ "Touch screen",	ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<TouchCalibrationView>(); } },
+		{ "Touch screen",	ui::Color::dark_cyan(), &bitmap_icon_soundboard,	[&nav](){ nav.push<TouchCalibrationView>(); } },
 		{ "Play dead",		ui::Color::dark_cyan(), &bitmap_icon_playdead,	[&nav](){ nav.push<SetPlayDeadView>(); } }
 	});
 	set_max_rows(2); // allow wider buttons

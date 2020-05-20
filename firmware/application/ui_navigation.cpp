@@ -446,9 +446,9 @@ UtilitiesMenuView::UtilitiesMenuView(NavigationView& nav) {
 		//{ "Notepad",		ui::Color::dark_grey(),	&bitmap_icon_notepad,	[&nav](){ nav.push<NotImplementedView>(); } },
 		{ "Signal gen", 	ui::Color::green(), 	&bitmap_icon_cwgen,		[&nav](){ nav.push<SigGenView>(); } },
 		//{ "Tone search",	ui::Color::green(), &bitmap_icon_search,				[&nav](){ nav.push<ToneSearchView>(); } },
-		{ "Wave viewer",	ui::Color::blue(),		nullptr,				[&nav](){ nav.push<ViewWavView>(); } },
-		{ "Antenna length",	ui::Color::yellow(),	nullptr,				[&nav](){ nav.push<WhipCalcView>(); } },
-		{ "Wipe SD card",	ui::Color::red(),		nullptr,				[&nav](){ nav.push<WipeSDView>(); } },
+		{ "Wave viewer",	ui::Color::blue(),		&bitmap_icon_cwgen,				[&nav](){ nav.push<ViewWavView>(); } },
+		{ "Antenna length",	ui::Color::yellow(),	&bitmap_icon_biast_off,				[&nav](){ nav.push<WhipCalcView>(); } },
+		{ "Wipe SD card",	ui::Color::red(),		&bitmap_icon_sd,				[&nav](){ nav.push<WipeSDView>(); } },
 	});
 	set_max_rows(2); // allow wider buttons
 }
