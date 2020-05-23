@@ -89,7 +89,7 @@ ADSBPositionView::ADSBPositionView(
 	button_set_map.on_select = [this, &nav](Button&) {
 		nav.push<GeoMapView>(
 			geopos.altitude(),
-			GeoPos::alt_unit::FEET,
+			GeoPos::alt_unit::METERS,
 			geopos.lat(),
 			geopos.lon(),
 			[this](int32_t altitude, float lat, float lon) {
