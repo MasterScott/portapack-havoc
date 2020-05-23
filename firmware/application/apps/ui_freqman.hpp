@@ -126,7 +126,7 @@ public:
 	
 	FrequencyLoadView(NavigationView& nav);
 
-	std::string title() const override { return "Load frequency"; };
+	std::string title() const override { return "Load freq"; };
 	
 private:
 	void refresh_widgets(const bool v);
