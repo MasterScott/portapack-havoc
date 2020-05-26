@@ -31,14 +31,14 @@ using namespace encoders;
 
 namespace ui {
 
-class EncodersConfigView : public View {
+class EncodersTransmitView : public View {
 public:
-	EncodersConfigView(NavigationView& nav, Rect parent_rect);
+	EncodersTransmitView(NavigationView& nav, Rect parent_rect);
 
-	EncodersConfigView(const EncodersConfigView&) = delete;
-	EncodersConfigView(EncodersConfigView&&) = delete;
-	EncodersConfigView& operator=(const EncodersConfigView&) = delete;
-	EncodersConfigView& operator=(EncodersConfigView&&) = delete;
+	EncodersTransmitView(const EncodersTransmitView&) = delete;
+	EncodersTransmitView(EncodersTransmitView&&) = delete;
+	EncodersTransmitView& operator=(const EncodersTransmitView&) = delete;
+	EncodersTransmitView& operator=(EncodersTransmitView&&) = delete;
 
 	void focus() override;
 	void on_show() override;
@@ -156,9 +156,9 @@ private:
 };
 
 
-class EncodersScanView : public View {
+class EncodersScannerView : public View {
 public:
-	EncodersScanView(NavigationView& nav, Rect parent_rect);
+	EncodersScannerView(NavigationView& nav, Rect parent_rect);
 
 	void focus() override;
 
@@ -214,12 +214,12 @@ private:
 	Rect view_rect = { 0, 4 * 8, 240, 280 };
 	NavigationView& nav_;
 
-	EncodersConfigView view_config { nav_, view_rect };
-	EncodersScanView view_scan { nav_, view_rect };
+	EncodersTransmitView view_transmit { nav_, view_rect };
+	EncodersScannerView view_scan { nav_, view_rect };
 
 	TabView tab_view {
 		{ "Scanner", Color::green(), &view_scan },
-		{ "Transmit", Color::cyan(), &view_config },
+		{ "Transmit", Color::cyan(), &view_transmit },
 	};
 
 };

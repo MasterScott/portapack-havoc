@@ -29,7 +29,7 @@ using namespace portapack;
 
 namespace ui {
 
-EncodersConfigView::EncodersConfigView(
+EncodersTransmitView::EncodersTransmitView(
         NavigationView& nav, Rect parent_rect
 ) : nav_ { nav }
 {
@@ -104,11 +104,11 @@ EncodersConfigView::EncodersConfigView(
 	};
 }
 
-void EncodersConfigView::focus() {
+void EncodersTransmitView::focus() {
 	options_enctype.focus();
 }
 
-void EncodersConfigView::on_type_change(size_t index) {
+void EncodersTransmitView::on_type_change(size_t index) {
 	std::string format_string = "";
 	size_t word_length;
 	char symbol_type;
@@ -140,12 +140,12 @@ void EncodersConfigView::on_type_change(size_t index) {
 	generate_frame();
 }
 
-void EncodersConfigView::on_show() {
+void EncodersTransmitView::on_show() {
 	options_enctype.set_selected_index(0);
 	on_type_change(0);
 }
 
-void EncodersConfigView::draw_waveform() {
+void EncodersTransmitView::draw_waveform() {
 	size_t length = frame_fragments.length();
 
 	for (size_t n = 0; n < length; n++)
@@ -155,7 +155,7 @@ void EncodersConfigView::draw_waveform() {
 	waveform.set_dirty();
 }
 
-void EncodersConfigView::generate_frame() {
+void EncodersTransmitView::generate_frame() {
 	size_t i = 0;
 	
 	frame_fragments.clear();
@@ -170,15 +170,15 @@ void EncodersConfigView::generate_frame() {
 	draw_waveform();
 }
 
-uint32_t EncodersConfigView::samples_per_bit() {
+uint32_t EncodersTransmitView::samples_per_bit() {
 	return OOK_SAMPLERATE / ((field_clk.value() * 1000) / encoder_def->clk_per_fragment);
 }
 
-uint32_t EncodersConfigView::pause_symbols() {
+uint32_t EncodersTransmitView::pause_symbols() {
 	return encoder_def->pause_symbols;
 }
 
-void EncodersConfigView::update_progress() {
+void EncodersTransmitView::update_progress() {
 	std::string str_buffer;
 	
 	// text_status.set("            ");
@@ -204,7 +204,7 @@ void EncodersConfigView::update_progress() {
 	}
 }
 
-void EncodersConfigView::on_tx_progress(const uint32_t progress, const bool done) {
+void EncodersTransmitView::on_tx_progress(const uint32_t progress, const bool done) {
 	//char str[16];
 	
 	if (!done) {
@@ -250,7 +250,7 @@ void EncodersConfigView::on_tx_progress(const uint32_t progress, const bool done
 	}
 }
 
-void EncodersConfigView::start_tx(const bool scan) {
+void EncodersTransmitView::start_tx(const bool scan) {
 	(void)scan;
 	size_t bitstream_length = 0;
 	
@@ -291,11 +291,11 @@ void EncodersConfigView::start_tx(const bool scan) {
 	);
 }
 
-void EncodersScanView::focus() {
+void EncodersScannerView::focus() {
 	field_debug.focus();
 }
 
-EncodersScanView::EncodersScanView(
+EncodersScannerView::EncodersScannerView(
 	NavigationView&, Rect parent_rect
 ) {
 	set_parent_rect(parent_rect);
@@ -344,7 +344,7 @@ EncodersView::EncodersView(
 
 	add_children({
 		&tab_view,
-		&view_config,
+		&view_transmit,
 		&view_scan
 	});
 	
