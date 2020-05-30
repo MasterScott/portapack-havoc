@@ -154,15 +154,14 @@ AnalogAudioView::AnalogAudioView(
 	audio::output::start();
 
 	update_modulation(static_cast<ReceiverModel::Mode>(modulation));
-    on_modulation_changed(static_cast<ReceiverModel::Mode>(modulation));
+	on_modulation_changed(static_cast<ReceiverModel::Mode>(modulation));
 }
 
 AnalogAudioView::~AnalogAudioView() {
 	// TODO: Manipulating audio codec here, and in ui_receiver.cpp. Good to do
 	// both?
 	audio::output::stop();
-
-	receiver_model.set_sampling_rate(3072000); 	// Just a hack to avoid hanging other apps if the last modulation was SPEC
+	receiver_model.set_sampling_rate(3072000);
 	receiver_model.disable();
 
 	baseband::shutdown();
