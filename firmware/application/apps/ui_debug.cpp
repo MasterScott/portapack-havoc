@@ -19,6 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "portapack_persistent_memory.hpp"
 #include "ui_debug.hpp"
 
 #include "ch.h"
@@ -344,9 +345,11 @@ DebugPeripheralsMenuView::DebugPeripheralsMenuView(NavigationView& nav) {
 /* DebugMenuView *********************************************************/
 
 DebugMenuView::DebugMenuView(NavigationView& nav) {
+	if (portapack::persistent_memory::config_backbutton()) add_items({
+		{ "..",				ui::Color::light_grey(),&bitmap_icon_previous,	[&nav](){ nav.pop(); } },
+	});
 	add_items({
-		//{ "..",				ui::Color::light_grey(),&bitmap_icon_previous,	[&nav](){ nav.pop(); } },
-		{ "Memory", 		ui::Color::cyan(),	&bitmap_icon_memory,	[&nav](){ nav.push<DebugMemoryView>(); } },
+		{ "Memory", 		ui::Color::white(),	&bitmap_icon_soundboard,	[&nav](){ nav.push<DebugMemoryView>(); } },
 		//{ "Radio State",	ui::Color::white(),	nullptr,	[&nav](){ nav.push<NotImplementedView>(); } },
 		{ "SD Card",		ui::Color::cyan(),	&bitmap_icon_sdcard,	[&nav](){ nav.push<SDCardDebugView>(); } },
 		{ "Peripherals",	ui::Color::cyan(),	&bitmap_icon_peripherals,	[&nav](){ nav.push<DebugPeripheralsMenuView>(); } },
