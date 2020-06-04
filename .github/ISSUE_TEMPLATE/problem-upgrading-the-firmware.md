@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **What is happening?**
-Describe here why you are unable to upgrade the firmware. Before describing your problems, please read: https://github.com/eried/portapack-havoc/wiki/Update-firmware.
+Describe here why you are unable to upgrade the firmware. Before describing your problems, please read: https://github.com/z4ziggy/portapack-havoc/wiki/Flashing
 
 **Were you able to update the firmware before?**
 Things might be confusing the first time, please check the video available on the link above if this is your first time.
