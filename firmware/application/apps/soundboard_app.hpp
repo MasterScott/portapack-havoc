@@ -81,11 +81,11 @@ private:
 	
 	Labels labels {
 		//{ { 0, 20 * 8 + 4 }, "Title:", Color::light_grey() },
-		{ { 0, 21 * 8 }, "Key:", Color::light_grey() }
+		{ { 0, 23 * 8 }, "Key:", Color::light_grey() }
 	};
 	
 	MenuView menu_view {
-		{ 0, 0, 240, 22 * 8 },
+		{ 0, 0, 240, 23 * 8 },
 		true
 	};
 	Text text_empty {
