@@ -119,14 +119,14 @@ private:
 	};
 
 	ImageButton button_back {
-		{ 2, 0 * 16, 16, 16 },
+		{ 0, 0 * 16, 14, 16 },
 		&bitmap_icon_previous,
 		Color::white(),
 		Color::dark_grey()
 	};
 
 	Text title {
-		{ 20, 0, 14 * 8, 1 * 16 },
+		{ 16, 0, 15 * 8, 1 * 16 },
 		default_title,
 	};
 
