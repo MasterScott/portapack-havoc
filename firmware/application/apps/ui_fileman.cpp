@@ -104,8 +104,16 @@ FileManBaseView::FileManBaseView(
 	});
 
 	menu_view.on_left = [&nav, this]() {
-		load_directory_contents(get_parent_dir());
-		refresh_list();
+		if (!current_path.string().length()) {
+			if (!menu_view.highlighted_index()) {
+				nav.pop();
+			} else {
+				menu_view.set_highlighted(0);
+			}
+		} else {
+			load_directory_contents(get_parent_dir());
+			refresh_list();
+		}
 	};
 	
 	button_exit.on_select = [this, &nav](Button&) {
