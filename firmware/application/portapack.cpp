@@ -82,42 +82,7 @@ TransmitterModel transmitter_model;
 
 TemperatureLogger temperature_logger;
 
-bool antenna_bias { false };
 uint8_t bl_tick_counter { 0 };
-
-void set_antenna_bias(const bool v) {
-	antenna_bias = v;
-	if (antenna_bias) {
-		//radio::set_antenna_bias(true);
-		receiver_model.set_antenna_bias();
-		transmitter_model.set_antenna_bias();
-	} else {
-		//radio::set_antenna_bias(false);
-		receiver_model.set_antenna_bias();
-		transmitter_model.set_antenna_bias();
-	}
-	persistent_memory::set_antenna_bias(v);
-}
-
-bool get_antenna_bias() {
-	return antenna_bias;
-}
-
-bool speaker_mode { false };
-void set_speaker_mode(const bool v) {
- 	speaker_mode = v;
- 	if (speaker_mode)
- 	{
- 		audio::output::speaker_unmute();
-	} else {
- 		audio::output::speaker_mute();
- 	}
-	persistent_memory::set_speaker_mode(speaker_mode);
-}
-
-bool get_speaker_mode() {
-	return speaker_mode;
-}
 
 static constexpr uint32_t systick_count(const uint32_t clock_source_f) {
 	return clock_source_f / CH_FREQUENCY;
@@ -394,7 +359,6 @@ bool init() {
 	clock_manager.set_reference_ppb(persistent_memory::correction_ppb());
 
 	audio::init(portapack_audio_codec());
-	set_speaker_mode(persistent_memory::speaker_mode());
 	
 	clock_manager.enable_first_if_clock();
 	clock_manager.enable_second_if_clock();
@@ -405,8 +369,6 @@ bool init() {
 
 	LPC_CREG->DMAMUX = portapack::gpdma_mux;
 	gpdma::controller.enable();
-
-	set_antenna_bias(persistent_memory::antenna_bias());
 
 	return true;
 }

@@ -113,7 +113,7 @@ SetRadioView::SetRadioView(NavigationView& nav) {
 		nav.pop();
 	};
 
-	const auto reference = portapack::clock_manager.get_reference();
+	const auto reference = clock_manager.get_reference();
 	
 	std::string source_name("---");
 	switch(reference.source) {
@@ -150,21 +150,21 @@ SetRadioView::SetRadioView(NavigationView& nav) {
 	});
 
 	SetFrequencyCorrectionModel model {
-		static_cast<int8_t>(portapack::persistent_memory::correction_ppb() / 1000)
+		static_cast<int8_t>(persistent_memory::correction_ppb() / 1000)
 	};
 
 	form_init(model);
 
-	check_bias.set_value(portapack::get_antenna_bias());
+	check_bias.set_value(persistent_memory::antenna_bias());
 	check_bias.on_select = [this](Checkbox&, bool v) {
-		portapack::set_antenna_bias(v);
+		persistent_memory::set_antenna_bias(v);
 		StatusRefreshMessage message { };
 		EventDispatcher::send_message(message);
 	};
 
 	button_done.on_select = [this, &nav](Button&){
 		const auto model = this->form_collect();
-		portapack::persistent_memory::set_correction_ppb(model.ppm * 1000);
+		persistent_memory::set_correction_ppb(model.ppm * 1000);
 		nav.pop();
 	};
 }
@@ -488,7 +488,7 @@ void ModInfoView::focus() {
 }*/
 
 SettingsMenuView::SettingsMenuView(NavigationView& nav) {
-	if (portapack::persistent_memory::config_backbutton()) add_items({
+	if (persistent_memory::config_backbutton()) add_items({
 		{ "..",				ui::Color::light_grey(),&bitmap_icon_previous,	[&nav](){ nav.pop(); } },
 		});
 	add_items({

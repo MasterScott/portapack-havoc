@@ -116,17 +116,20 @@ SystemStatusView::SystemStatusView(
 		&sd_card_status_view,
 	});
 	
-	if (portapack::persistent_memory::config_speaker()) 
-		button_speaker.hidden(false);
-	else
-		button_speaker.hidden(true);
-
 	button_back.id = -1;	// Special ID used by FocusManager
 	title.set_style(&style_systemstatus);
-	
+
 	if (portapack::persistent_memory::stealth_mode())
 		button_stealth.set_foreground(ui::Color::green());
-	
+
+	if (portapack::persistent_memory::speaker_mode()) {
+		audio::output::speaker_unmute();
+	} else {
+		audio::output::speaker_mute();
+	}
+
+	radio::set_antenna_bias(portapack::persistent_memory::antenna_bias());
+
 	/*if (!portapack::persistent_memory::ui_config_textentry())
 		button_textentry.set_bitmap(&bitmap_icon_keyboard);
 	else
@@ -168,12 +171,12 @@ SystemStatusView::SystemStatusView(
 void SystemStatusView::refresh() {
 	if (portapack::persistent_memory::config_speaker()) {
 		button_speaker.hidden(false);
-		button_speaker.set_foreground(portapack::get_speaker_mode() ? Color::green() : Color::light_grey());
+		button_speaker.set_foreground(portapack::persistent_memory::speaker_mode() ? Color::green() : Color::light_grey());
 	} else {
 		button_speaker.hidden(true);
 	}
 
-	if (portapack::get_antenna_bias()) {
+	if (portapack::persistent_memory::antenna_bias()) {
 		button_bias_tee.set_bitmap(&bitmap_icon_biast_on);
 		if (portapack::clock_manager.get_reference().source == ClockManager::ReferenceSource::External) {
 			button_bias_tee.set_foreground(ui::Color::green());
@@ -208,15 +211,12 @@ void SystemStatusView::set_title(const std::string new_value) {
 }
 
 void SystemStatusView::on_speaker() {
-	if (!portapack::get_speaker_mode()) {
- 		portapack::set_speaker_mode(true);
- 		button_speaker.set_foreground(Color::green());
-	} else {
-		portapack::set_speaker_mode(false);
-		button_speaker.set_foreground(Color::light_grey());
-	}
-}
+	bool mode = not portapack::persistent_memory::speaker_mode();
 
+	portapack::persistent_memory::set_speaker_mode(mode);
+
+	button_speaker.set_foreground(mode ? Color::green() : Color::light_grey());
+}
 
 void SystemStatusView::on_stealth() {
 	bool mode = not portapack::persistent_memory::stealth_mode();
@@ -227,15 +227,19 @@ void SystemStatusView::on_stealth() {
 }
 
 void SystemStatusView::on_bias_tee() {
-	if (!portapack::get_antenna_bias()) {
+	bool mode = not portapack::persistent_memory::antenna_bias();
+
+	portapack::persistent_memory::set_antenna_bias(mode);
+
+	if (mode) {
 		nav_.display_modal("Bias voltage", "Enable DC voltage on\nantenna connector?", YESNO, [this](bool v) {
 			if (v) {
-				portapack::set_antenna_bias(true);
+				radio::set_antenna_bias(true);
 				refresh();
 			}
 		});
 	} else {
-		portapack::set_antenna_bias(false);
+		radio::set_antenna_bias(false);
 		refresh();
 	}
 }

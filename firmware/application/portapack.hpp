@@ -42,9 +42,6 @@ extern portapack::IO io;
 
 extern lcd::ILI9341 display;
 
-void set_speaker_mode(const bool v);
-bool get_speaker_mode();
-
 extern I2C i2c0;
 extern SPI ssp1;
 
@@ -55,12 +52,8 @@ extern ReceiverModel receiver_model;
 extern TransmitterModel transmitter_model;
 
 extern uint8_t bl_tick_counter;
-extern bool antenna_bias;
 
 extern TemperatureLogger temperature_logger;
-
-void set_antenna_bias(const bool v);
-bool get_antenna_bias();
 
 bool init();
 void shutdown();
