@@ -172,22 +172,25 @@ void SystemStatusView::refresh() {
 	} else {
 		button_speaker.hidden(true);
 	}
+
 	if (portapack::get_antenna_bias()) {
 		button_bias_tee.set_bitmap(&bitmap_icon_biast_on);
-		button_bias_tee.set_foreground(ui::Color::yellow());
+		if (portapack::clock_manager.get_reference().source == ClockManager::ReferenceSource::External) {
+			button_bias_tee.set_foreground(ui::Color::green());
+		} else {
+			button_bias_tee.set_foreground(ui::Color::yellow());
+		}
 	} else {
 		button_bias_tee.set_bitmap(&bitmap_icon_biast_off);
 		button_bias_tee.set_foreground(ui::Color::light_grey());
 	}
-	
+
 	if (portapack::clock_manager.get_reference().source == ClockManager::ReferenceSource::External) {
 		image_clock_status.set_bitmap(&bitmap_icon_clk_ext);
-		button_bias_tee.set_foreground(ui::Color::green());
 	} else {
 		image_clock_status.set_bitmap(&bitmap_icon_clk_int);
-		button_bias_tee.set_foreground(ui::Color::light_grey());
 	}
-	
+
 	set_dirty();
 }
 
