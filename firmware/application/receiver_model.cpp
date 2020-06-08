@@ -198,7 +198,7 @@ void ReceiverModel::update_tuning_frequency() {
 
 void ReceiverModel::update_antenna_bias() {
 	if (enabled_)
-		radio::set_antenna_bias(portapack::get_antenna_bias());
+		radio::set_antenna_bias(persistent_memory::antenna_bias());
 }
 
 void ReceiverModel::update_rf_amp() {
