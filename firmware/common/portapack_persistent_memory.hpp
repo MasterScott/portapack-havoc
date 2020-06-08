@@ -74,6 +74,12 @@ void set_playdead_sequence(const uint32_t new_value);
 bool stealth_mode();
 void set_stealth_mode(const bool v);
 
+bool antenna_bias();
+void set_antenna_bias(bool v);
+
+bool speaker_mode();
+void set_speaker_mode(bool v);
+
 bool config_splash();
 bool config_login();
 uint32_t config_backlight_timer();

@@ -167,10 +167,9 @@ SystemStatusView::SystemStatusView(
 
 void SystemStatusView::refresh() {
 	if (portapack::persistent_memory::config_speaker()) {
-		button_speaker.set_foreground(Color::light_grey());
 		button_speaker.hidden(false);
-	}		
-	else {
+		button_speaker.set_foreground(portapack::get_speaker_mode() ? Color::green() : Color::light_grey());
+	} else {
 		button_speaker.hidden(true);
 	}
 	if (portapack::get_antenna_bias()) {
@@ -206,18 +205,14 @@ void SystemStatusView::set_title(const std::string new_value) {
 }
 
 void SystemStatusView::on_speaker() {
- 	if (!portapack::speaker_mode) 
- 	{
+	if (!portapack::get_speaker_mode()) {
  		portapack::set_speaker_mode(true);
  		button_speaker.set_foreground(Color::green());
- 	}
- 	else
- 	{
- 		portapack::set_speaker_mode(false);
- 		button_speaker.set_foreground(Color::light_grey());
- 	}
-
- }
+	} else {
+		portapack::set_speaker_mode(false);
+		button_speaker.set_foreground(Color::light_grey());
+	}
+}
 
 
 void SystemStatusView::on_stealth() {
@@ -229,23 +224,15 @@ void SystemStatusView::on_stealth() {
 }
 
 void SystemStatusView::on_bias_tee() {
-	if (!portapack::antenna_bias) {
+	if (!portapack::get_antenna_bias()) {
 		nav_.display_modal("Bias voltage", "Enable DC voltage on\nantenna connector?", YESNO, [this](bool v) {
-				if (v) {
-					portapack::set_antenna_bias(true);
-					//radio::set_antenna_bias(true);
-					receiver_model.set_antenna_bias();
-					transmitter_model.set_antenna_bias();
-					button_bias_tee.set_foreground(Color::green());
-					refresh();
-				}
-			});
+			if (v) {
+				portapack::set_antenna_bias(true);
+				refresh();
+			}
+		});
 	} else {
 		portapack::set_antenna_bias(false);
-		//radio::set_antenna_bias(false);
-		receiver_model.set_antenna_bias();
-		transmitter_model.set_antenna_bias();
-		button_bias_tee.set_foreground(Color::light_grey());
 		refresh();
 	}
 }
