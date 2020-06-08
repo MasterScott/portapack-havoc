@@ -236,6 +236,7 @@ void SystemStatusView::on_bias_tee() {
 					//radio::set_antenna_bias(true);
 					receiver_model.set_antenna_bias();
 					transmitter_model.set_antenna_bias();
+					button_bias_tee.set_foreground(Color::green());
 					refresh();
 				}
 			});
@@ -244,6 +245,7 @@ void SystemStatusView::on_bias_tee() {
 		//radio::set_antenna_bias(false);
 		receiver_model.set_antenna_bias();
 		transmitter_model.set_antenna_bias();
+		button_bias_tee.set_foreground(Color::light_grey());
 		refresh();
 	}
 }
