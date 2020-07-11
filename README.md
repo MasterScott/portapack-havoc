@@ -52,11 +52,11 @@ As its name implies, HAVOC's functions can be fun, mean or even useful sometimes
 
 Feature | Progress | Notes
 ------- | -------- | -----
-POCSAG RX � | 95% | Needs support for numeric messages
+POCSAG RX   | 95% | Needs support for numeric messages
 Morse TX    | 95% | Needs fox hunt scheduler and live keying mode
 Mic. TX     | 95% | Carrier leak bug, need to find guard tones for various brands of wireless mics
 ADS-B RX    | 90% | Needs angle and speed decoding
-Close-Call™ | 85% | Needs adjustments and optimization for wider frequency range
+Close-Callâ¢ | 85% | Needs adjustments and optimization for wider frequency range
 ADS-B TX    | 85% | Works but baseband module needs cleaning
 SSTV TX     | 80% | Needs better bitmap file handling, support for other modes (ROBOT ?) and callsign FSK ID
 Radiosondes | 75% | Needs support for other models

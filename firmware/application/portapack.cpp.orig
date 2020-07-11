@@ -82,9 +82,10 @@ TransmitterModel transmitter_model;
 
 TemperatureLogger temperature_logger;
 
-bool antenna_bias { false };
 uint8_t bl_tick_counter { 0 };
 
+<<<<<<< HEAD
+=======
 void set_antenna_bias(const bool v) {
 	antenna_bias = v;
 }
@@ -102,6 +103,7 @@ bool speaker_mode { false };
  		audio::output::speaker_mute();
  }
 
+>>>>>>> eried/master
 static constexpr uint32_t systick_count(const uint32_t clock_source_f) {
 	return clock_source_f / CH_FREQUENCY;
 }
