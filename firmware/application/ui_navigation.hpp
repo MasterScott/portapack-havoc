@@ -109,7 +109,7 @@ public:
 	void set_title(const std::string new_value);
 
 private:
-	static constexpr auto default_title = "PortaPack";
+	static constexpr auto default_title = "PortaPack|Havoc";
 	
 	NavigationView& nav_;
 
@@ -119,31 +119,23 @@ private:
 	};
 
 	ImageButton button_back {
-		{ 2, 0 * 16, 16, 16 },
+		{ 0, 0 * 16, 14, 16 },
 		&bitmap_icon_previous,
 		Color::white(),
 		Color::dark_grey()
 	};
 
 	Text title {
-		{ 20, 0, 12 * 8, 1 * 16 },
+		{ 16, 0, 15 * 8, 1 * 16 },
 		default_title,
 	};
 
-
-	ImageButton button_microphone {
-		{ 15 * 8, 0, 2 * 8, 1 * 16 },
-		&bitmap_icon_microphone,
-		Color::light_grey(),
-		Color::dark_grey()
-	};
-
 	ImageButton button_speaker {
-		{ 17 * 8, 0, 2 * 8, 1 * 16 },
-		&bitmap_icon_speaker,
-		Color::light_grey(),
-		Color::dark_grey()
-	};
+ 		{ 17 * 8, 0, 2 * 8, 1 * 16 },
+ 		&bitmap_icon_speaker,
+ 		Color::light_grey(),
+ 		Color::dark_grey()
+ 	};
 	
 	ImageButton button_stealth {
 		{ 19 * 8, 0, 2 * 8, 1 * 16 },
@@ -191,7 +183,6 @@ private:
 		{ 28 * 8, 0 * 16,  2 * 8, 1 * 16 }
 	};
 
-	void on_microphone();
 	void on_speaker();
 	void on_stealth();
 	void on_bias_tee();
@@ -241,7 +232,7 @@ public:
 class UtilitiesMenuView : public BtnGridView {
 public:
 	UtilitiesMenuView(NavigationView& nav);
-	std::string title() const override { return "Utilities"; };	
+	std::string title() const override { return "Tools"; };	
 };
 
 class SystemMenuView : public BtnGridView {

@@ -60,7 +60,7 @@ def convert_png(file):
 				data += 128
 			
 			if j % 8 == 7:
-				f.write("0x%0.2X, " % data)
+				f.write("0x%0.2X," % data)
 				data = 0
 		
 		f.write("\n")

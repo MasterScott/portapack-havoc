@@ -57,12 +57,8 @@ extern ReceiverModel receiver_model;
 extern TransmitterModel transmitter_model;
 
 extern uint8_t bl_tick_counter;
-extern bool antenna_bias;
 
 extern TemperatureLogger temperature_logger;
-
-void set_antenna_bias(const bool v);
-bool get_antenna_bias();
 
 bool init();
 void shutdown();

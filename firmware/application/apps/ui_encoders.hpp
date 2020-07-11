@@ -31,23 +31,22 @@ using namespace encoders;
 
 namespace ui {
 
-class EncodersConfigView : public View {
+class EncodersTransmitView : public View {
 public:
-	EncodersConfigView(NavigationView& nav, Rect parent_rect);
-	
-	EncodersConfigView(const EncodersConfigView&) = delete;
-	EncodersConfigView(EncodersConfigView&&) = delete;
-	EncodersConfigView& operator=(const EncodersConfigView&) = delete;
-	EncodersConfigView& operator=(EncodersConfigView&&) = delete;
-	
+	EncodersTransmitView(NavigationView& nav, Rect parent_rect);
+
+	EncodersTransmitView(const EncodersTransmitView&) = delete;
+	EncodersTransmitView(EncodersTransmitView&&) = delete;
+	EncodersTransmitView& operator=(const EncodersTransmitView&) = delete;
+	EncodersTransmitView& operator=(EncodersTransmitView&&) = delete;
+
 	void focus() override;
 	void on_show() override;
-	
-	uint8_t repeat_min();
+
 	uint32_t samples_per_bit();
 	uint32_t pause_symbols();
 	void generate_frame();
-	
+
 	std::string frame_fragments = "0";
 
 private:
@@ -58,11 +57,26 @@ private:
 	int16_t waveform_buffer[550];
 	const encoder_def_t * encoder_def { };
 	//uint8_t enc_type = 0;
+	NavigationView& nav_;
+
+	enum tx_modes {
+		IDLE = 0,
+		SINGLE,
+		SCAN
+	};
+
+	tx_modes tx_mode = IDLE;
+	uint8_t repeat_index { 0 };
+	uint8_t repeat_min { 0 };
+
+	void update_progress();
+	void start_tx(const bool scan);
+	void on_tx_progress(const uint32_t progress, const bool done);
 
 	void draw_waveform();
 	void on_bitfield();
 	void on_type_change(size_t index);
-	
+
 	Labels labels {
 		{ { 1 * 8, 0 }, "Type:", Color::light_grey() },
 		{ { 16 * 8, 0 }, "Clk:", Color::light_grey() },
@@ -95,18 +109,18 @@ private:
 		100,
 		' '
 	};
-	
+
 	SymField symfield_word {
 		{ 2 * 8, 6 * 8 },
 		20,
 		SymField::SYMFIELD_DEF
 	};
-	
+
 	Text text_format {
 		{ 2 * 8, 8 * 8, 24 * 8, 16 },
 		""
 	};
-	
+
 	Waveform waveform {
 		{ 0, 14 * 8, 240, 32 },
 		waveform_buffer,
@@ -115,20 +129,44 @@ private:
 		true,
 		Color::yellow()
 	};
+
+	Text text_status {
+		{ 2 * 8, 22 * 8, 128, 16 },
+		"Ready"
+	};
+
+	ProgressBar progressbar {
+		{ 2 * 8, 24 * 8, 208, 16 }
+	};
+
+	TransmitterView tx_view {
+		28 * 8,
+		50000,
+		9
+	};
+
+	MessageHandlerRegistration message_handler_tx_progress {
+		Message::ID::TXProgress,
+		[this](const Message* const p) {
+			const auto message = *reinterpret_cast<const TXProgressMessage*>(p);
+			this->on_tx_progress(message.progress, message.done);
+		}
+	};
+
 };
 
 
-class EncodersScanView : public View {
+class EncodersScannerView : public View {
 public:
-	EncodersScanView(NavigationView& nav, Rect parent_rect);
-	
+	EncodersScannerView(NavigationView& nav, Rect parent_rect);
+
 	void focus() override;
 
 private:
 	Labels labels {
 		{ { 1 * 8, 1 * 8 }, "Coming soon...", Color::light_grey() }
 	};
-	
+
 	// DEBUG
 	NumberField field_debug {
 		{ 1 * 8, 6 * 8 },
@@ -137,13 +175,13 @@ private:
 		1,
 		' '
 	};
-	
+
 	// DEBUG
 	Text text_debug {
 		{ 1 * 8, 8 * 8, 24 * 8, 16 },
 		""
 	};
-	
+
 	// DEBUG
 	Text text_length {
 		{ 1 * 8, 10 * 8, 24 * 8, 16 },
@@ -155,28 +193,13 @@ class EncodersView : public View {
 public:
 	EncodersView(NavigationView& nav);
 	~EncodersView();
-	
+
 	void focus() override;
-	
-	std::string title() const override { return "OOK TX"; };
+
+	std::string title() const override { return "OOK transmit"; };
 
 private:
-	NavigationView& nav_;
 
-	enum tx_modes {
-		IDLE = 0,
-		SINGLE,
-		SCAN
-	};
-	
-	tx_modes tx_mode = IDLE;
-	uint8_t repeat_index { 0 };
-	uint8_t repeat_min { 0 };
-	
-	void update_progress();
-	void start_tx(const bool scan);
-	void on_tx_progress(const uint32_t progress, const bool done);
-	
 	/*const Style style_address {
 		.font = font::fixed_8x16,
 		.background = Color::black(),
@@ -187,39 +210,18 @@ private:
 		.background = Color::black(),
 		.foreground = Color::blue(),
 	};*/
-	
-	Rect view_rect = { 0, 4 * 8, 240, 168 };
-	
-	EncodersConfigView view_config { nav_, view_rect };
-	EncodersScanView view_scan { nav_, view_rect };
-	
+
+	Rect view_rect = { 0, 4 * 8, 240, 280 };
+	NavigationView& nav_;
+
+	EncodersTransmitView view_transmit { nav_, view_rect };
+	EncodersScannerView view_scan { nav_, view_rect };
+
 	TabView tab_view {
-		{ "Config", Color::cyan(), &view_config },
-		{ "Scan", Color::green(), &view_scan },
+		{ "Scanner", Color::green(), &view_scan },
+		{ "Transmit", Color::cyan(), &view_transmit },
 	};
 
-	Text text_status {
-		{ 2 * 8, 13 * 16, 128, 16 },
-		"Ready"
-	};
-	
-	ProgressBar progressbar {
-		{ 2 * 8, 13 * 16 + 20, 208, 16 }
-	};
-	
-	TransmitterView tx_view {
-		16 * 16,
-		50000,
-		9
-	};
-	
-	MessageHandlerRegistration message_handler_tx_progress {
-		Message::ID::TXProgress,
-		[this](const Message* const p) {
-			const auto message = *reinterpret_cast<const TXProgressMessage*>(p);
-			this->on_tx_progress(message.progress, message.done);
-		}
-	};
 };
 
 } /* namespace ui */

@@ -29,9 +29,10 @@ using namespace portapack;
 
 namespace ui {
 
-EncodersConfigView::EncodersConfigView(
-	NavigationView&, Rect parent_rect
-) {
+EncodersTransmitView::EncodersTransmitView(
+        NavigationView& nav, Rect parent_rect
+) : nav_ { nav }
+{
 	using option_t = std::pair<std::string, int32_t>;
 	std::vector<option_t> enc_options;
 	size_t i;
@@ -49,8 +50,27 @@ EncodersConfigView::EncodersConfigView(
 		&field_frameduration,
 		&symfield_word,
 		&text_format,
-		&waveform
+		&waveform,
+		&text_status,
+		&progressbar,
+		&tx_view
 	});
+
+	tx_view.on_edit_frequency = [this, &nav]() {
+		auto new_view = nav.push<FrequencyKeypadView>(transmitter_model.tuning_frequency());
+		new_view->on_changed = [this](rf::Frequency f) {
+			transmitter_model.set_tuning_frequency(f);
+		};
+	};
+
+	tx_view.on_start = [this]() {
+		tx_view.set_transmitting(true);
+		start_tx(false);
+	};
+
+	tx_view.on_stop = [this]() {
+		tx_view.set_transmitting(false);
+	};
 
 	// Load encoder types in option field
 	for (i = 0; i < ENC_TYPES_COUNT; i++)
@@ -84,11 +104,11 @@ EncodersConfigView::EncodersConfigView(
 	};
 }
 
-void EncodersConfigView::focus() {
+void EncodersTransmitView::focus() {
 	options_enctype.focus();
 }
 
-void EncodersConfigView::on_type_change(size_t index) {
+void EncodersTransmitView::on_type_change(size_t index) {
 	std::string format_string = "";
 	size_t word_length;
 	char symbol_type;
@@ -120,12 +140,12 @@ void EncodersConfigView::on_type_change(size_t index) {
 	generate_frame();
 }
 
-void EncodersConfigView::on_show() {
+void EncodersTransmitView::on_show() {
 	options_enctype.set_selected_index(0);
 	on_type_change(0);
 }
 
-void EncodersConfigView::draw_waveform() {
+void EncodersTransmitView::draw_waveform() {
 	size_t length = frame_fragments.length();
 
 	for (size_t n = 0; n < length; n++)
@@ -135,7 +155,7 @@ void EncodersConfigView::draw_waveform() {
 	waveform.set_dirty();
 }
 
-void EncodersConfigView::generate_frame() {
+void EncodersTransmitView::generate_frame() {
 	size_t i = 0;
 	
 	frame_fragments.clear();
@@ -150,64 +170,15 @@ void EncodersConfigView::generate_frame() {
 	draw_waveform();
 }
 
-uint8_t EncodersConfigView::repeat_min() {
-	return encoder_def->repeat_min;
-}
-
-uint32_t EncodersConfigView::samples_per_bit() {
+uint32_t EncodersTransmitView::samples_per_bit() {
 	return OOK_SAMPLERATE / ((field_clk.value() * 1000) / encoder_def->clk_per_fragment);
 }
 
-uint32_t EncodersConfigView::pause_symbols() {
+uint32_t EncodersTransmitView::pause_symbols() {
 	return encoder_def->pause_symbols;
 }
 
-void EncodersScanView::focus() {
-	field_debug.focus();
-}
-
-EncodersScanView::EncodersScanView(
-	NavigationView&, Rect parent_rect
-) {
-	set_parent_rect(parent_rect);
-	hidden(true);
-	
-	add_children({
-		&labels,
-		&field_debug,
-		&text_debug,
-		&text_length
-	});
-	
-	// DEBUG
-	field_debug.on_change = [this](int32_t value) {
-		uint32_t l;
-		size_t length;
-		
-		de_bruijn debruijn_seq;
-		length = debruijn_seq.init(value);
-		
-		l = 1;
-		l <<= value;
-		l--;
-		if (l > 25)
-			l = 25;
-		text_debug.set(to_string_bin(debruijn_seq.compute(l), 25));
-		
-		text_length.set(to_string_dec_uint(length));
-	};
-}
-
-void EncodersView::focus() {
-	tab_view.focus();
-}
-
-EncodersView::~EncodersView() {
-	transmitter_model.disable();
-	baseband::shutdown();
-}
-
-void EncodersView::update_progress() {
+void EncodersTransmitView::update_progress() {
 	std::string str_buffer;
 	
 	// text_status.set("            ");
@@ -233,7 +204,7 @@ void EncodersView::update_progress() {
 	}
 }
 
-void EncodersView::on_tx_progress(const uint32_t progress, const bool done) {
+void EncodersTransmitView::on_tx_progress(const uint32_t progress, const bool done) {
 	//char str[16];
 	
 	if (!done) {
@@ -279,11 +250,11 @@ void EncodersView::on_tx_progress(const uint32_t progress, const bool done) {
 	}
 }
 
-void EncodersView::start_tx(const bool scan) {
+void EncodersTransmitView::start_tx(const bool scan) {
 	(void)scan;
 	size_t bitstream_length = 0;
 	
-	repeat_min = view_config.repeat_min();
+	repeat_min = encoder_def->repeat_min;
 	
 	/*if (scan) {
 		if (tx_mode != SCAN) {
@@ -303,9 +274,9 @@ void EncodersView::start_tx(const bool scan) {
 		update_progress();
 	//}
 	
-	view_config.generate_frame();
+	generate_frame();
 	
-	bitstream_length = make_bitstream(view_config.frame_fragments);
+	bitstream_length = make_bitstream(frame_fragments);
 
 	transmitter_model.set_sampling_rate(OOK_SAMPLERATE);
 	transmitter_model.set_rf_amp(true);
@@ -314,10 +285,55 @@ void EncodersView::start_tx(const bool scan) {
 	
 	baseband::set_ook_data(
 		bitstream_length,
-		view_config.samples_per_bit(),
+		samples_per_bit(),
 		repeat_min,
-		view_config.pause_symbols()
+		pause_symbols()
 	);
+}
+
+void EncodersScannerView::focus() {
+	field_debug.focus();
+}
+
+EncodersScannerView::EncodersScannerView(
+	NavigationView&, Rect parent_rect
+) {
+	set_parent_rect(parent_rect);
+	hidden(true);
+
+	add_children({
+		&labels,
+		&field_debug,
+		&text_debug,
+		&text_length
+	});
+
+	// DEBUG
+	field_debug.on_change = [this](int32_t value) {
+		uint32_t l;
+		size_t length;
+
+		de_bruijn debruijn_seq;
+		length = debruijn_seq.init(value);
+
+		l = 1;
+		l <<= value;
+		l--;
+		if (l > 25)
+			l = 25;
+		text_debug.set(to_string_bin(debruijn_seq.compute(l), 25));
+
+		text_length.set(to_string_dec_uint(length));
+	};
+}
+
+void EncodersView::focus() {
+	tab_view.focus();
+}
+
+EncodersView::~EncodersView() {
+	transmitter_model.disable();
+	baseband::shutdown();
 }
 
 EncodersView::EncodersView(
@@ -328,28 +344,10 @@ EncodersView::EncodersView(
 
 	add_children({
 		&tab_view,
-		&view_config,
-		&view_scan,
-		&text_status,
-		&progressbar,
-		&tx_view
+		&view_transmit,
+		&view_scan
 	});
 	
-	tx_view.on_edit_frequency = [this, &nav]() {
-		auto new_view = nav.push<FrequencyKeypadView>(transmitter_model.tuning_frequency());
-		new_view->on_changed = [this](rf::Frequency f) {
-			transmitter_model.set_tuning_frequency(f);
-		};
-	};
-	
-	tx_view.on_start = [this]() {
-		tx_view.set_transmitting(true);
-		start_tx(false);
-	};
-	
-	tx_view.on_stop = [this]() {
-		tx_view.set_transmitting(false);
-	};
 }
 
 } /* namespace ui */

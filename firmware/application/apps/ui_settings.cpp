@@ -29,6 +29,7 @@
 #include "lpc43xx_cpp.hpp"
 using namespace lpc43xx;
 
+#include "audio.hpp"
 #include "portapack.hpp"
 using portapack::receiver_model;
 using namespace portapack;
@@ -106,14 +107,13 @@ SetDateTimeModel SetDateTimeView::form_collect() {
 	};
 }
 
-SetRadioView::SetRadioView(
-	NavigationView& nav
-) {
+SetRadioView::SetRadioView(NavigationView& nav) {
+
 	button_cancel.on_select = [&nav](Button&){
 		nav.pop();
 	};
 
-	const auto reference = portapack::clock_manager.get_reference();
+	const auto reference = clock_manager.get_reference();
 	
 	std::string source_name("---");
 	switch(reference.source) {
@@ -150,21 +150,21 @@ SetRadioView::SetRadioView(
 	});
 
 	SetFrequencyCorrectionModel model {
-		static_cast<int8_t>(portapack::persistent_memory::correction_ppb() / 1000)
+		static_cast<int8_t>(persistent_memory::correction_ppb() / 1000)
 	};
 
 	form_init(model);
 
-	check_bias.set_value(portapack::get_antenna_bias());
+	check_bias.set_value(persistent_memory::antenna_bias());
 	check_bias.on_select = [this](Checkbox&, bool v) {
-		portapack::set_antenna_bias(v);
+		persistent_memory::set_antenna_bias(v);
 		StatusRefreshMessage message { };
 		EventDispatcher::send_message(message);
 	};
 
 	button_done.on_select = [this, &nav](Button&){
 		const auto model = this->form_collect();
-		portapack::persistent_memory::set_correction_ppb(model.ppm * 1000);
+		persistent_memory::set_correction_ppb(model.ppm * 1000);
 		nav.pop();
 	};
 }
@@ -183,6 +183,7 @@ SetFrequencyCorrectionModel SetRadioView::form_collect() {
 	};
 }
 
+/*
 SetPlayDeadView::SetPlayDeadView(NavigationView& nav) {
 	add_children({
 		&text_sequence,
@@ -234,19 +235,24 @@ SetPlayDeadView::SetPlayDeadView(NavigationView& nav) {
 void SetPlayDeadView::focus() {
 	button_cancel.focus();
 }
+*/
 
 SetUIView::SetUIView(NavigationView& nav) {
 	add_children({
-		&checkbox_login,
+		//&checkbox_login,
+		&checkbox_speaker,
+		&checkbox_backbutton,
 		&checkbox_bloff,
 		&options_bloff,
 		&checkbox_showsplash,
 		&button_ok
 	});
-	
-	//checkbox_showsplash.set_value(persistent_memory::config_splash());
-	checkbox_showsplash.set_value(true);
-	checkbox_login.set_value(persistent_memory::config_login());
+
+	checkbox_backbutton.set_value(persistent_memory::config_backbutton());
+	checkbox_speaker.set_value(persistent_memory::config_speaker());
+
+	checkbox_showsplash.set_value(persistent_memory::config_splash());
+	//checkbox_login.set_value(persistent_memory::config_login());
 	
 	uint32_t backlight_timer = persistent_memory::config_backlight_timer();
 	
@@ -257,20 +263,31 @@ SetUIView::SetUIView(NavigationView& nav) {
 		options_bloff.set_selected_index(0);
 	}
 
+	checkbox_speaker.on_select = [this](Checkbox&, bool v) {
+    		if (!v) audio::output::speaker_mute();		//Just mute audio if speaker is disabled
+
+			persistent_memory::set_config_speaker(v);	//Store Speaker status
+
+        StatusRefreshMessage message { };				//Refresh status bar with/out speaker
+        EventDispatcher::send_message(message);
+    };
+
 	button_ok.on_select = [&nav, this](Button&) {
 		if (checkbox_bloff.value())
 			persistent_memory::set_config_backlight_timer(options_bloff.selected_index() + 1);
 		else
 			persistent_memory::set_config_backlight_timer(0);
 		
+		persistent_memory::set_config_backbutton(checkbox_backbutton.value());	
+
 		persistent_memory::set_config_splash(checkbox_showsplash.value());
-		persistent_memory::set_config_login(checkbox_login.value());
+		//persistent_memory::set_config_login(checkbox_login.value());
 		nav.pop();
 	};
 }
 
 void SetUIView::focus() {
-	checkbox_login.focus();
+	button_ok.focus();
 }
 
 SetAudioView::SetAudioView(NavigationView& nav) {
@@ -471,15 +488,17 @@ void ModInfoView::focus() {
 }*/
 
 SettingsMenuView::SettingsMenuView(NavigationView& nav) {
+	if (persistent_memory::config_backbutton()) add_items({
+		{ "..",				ui::Color::light_grey(),&bitmap_icon_previous,	[&nav](){ nav.pop(); } },
+		});
 	add_items({
-		//{ "..", 				ui::Color::light_grey(), &bitmap_icon_previous,				[&nav](){ nav.pop(); } },
 		{ "Audio", 			ui::Color::dark_cyan(), &bitmap_icon_speaker,	[&nav](){ nav.push<SetAudioView>(); } },
-		{ "Radio",			ui::Color::dark_cyan(), &bitmap_icon_cwgen,	[&nav](){ nav.push<SetRadioView>(); } },
-		{ "UI", 			ui::Color::dark_cyan(), &bitmap_icon_pocsag,	[&nav](){ nav.push<SetUIView>(); } },
+		{ "Radio",			ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<SetRadioView>(); } },
+		{ "UI", 			ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<SetUIView>(); } },
 		//{ "SD card modules", ui::Color::dark_cyan(), [&nav](){ nav.push<ModInfoView>(); } },
 		{ "Date/Time",		ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<SetDateTimeView>(); } },
-		{ "Touch screen",	ui::Color::dark_cyan(), &bitmap_icon_soundboard,	[&nav](){ nav.push<TouchCalibrationView>(); } },
-		{ "Play dead",		ui::Color::dark_cyan(), &bitmap_icon_playdead,	[&nav](){ nav.push<SetPlayDeadView>(); } }
+		{ "Touch screen",	ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<TouchCalibrationView>(); } },
+		//{ "Play dead",		ui::Color::dark_cyan(), &bitmap_icon_playdead,	[&nav](){ nav.push<SetPlayDeadView>(); } }
 	});
 	set_max_rows(2); // allow wider buttons
 }

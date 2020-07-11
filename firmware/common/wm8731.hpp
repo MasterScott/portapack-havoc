@@ -342,21 +342,14 @@ public:
 	}
 
 	void speaker_enable() {};
-	void speaker_disable() {};
+ 	void speaker_disable() {};
+
 
 	void microphone_enable() override {
 		// TODO: Implement
 	}
 
 	void microphone_disable() override {
-		// TODO: Implement
-	}
-
-	void microphone_internal_enable() override {
-		// TODO: Implement
-	}
-
-	void microphone_internal_disable() override {
 		// TODO: Implement
 	}
 

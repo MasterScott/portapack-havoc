@@ -26,6 +26,7 @@
 using portapack::clock_manager;
 
 #include "portapack_hal.hpp"
+#include "portapack_persistent_memory.hpp"
 
 #include "i2s.hpp"
 using namespace lpc43xx;
@@ -146,25 +147,24 @@ void stop() {
 void mute() {
 	i2s::i2s0::tx_mute();
 	audio_codec->headphone_disable();
-	//audio_codec->speaker_enable();
+	//audio_codec->speaker_disable();
 }
 
 void unmute() {
 	i2s::i2s0::tx_unmute();
 	audio_codec->headphone_enable();
-	//audio_codec->speaker_disable();
+	//audio_codec->speaker_enable();
 }
 
 void speaker_mute() {
-	i2s::i2s0::tx_mute();
-	audio_codec->speaker_disable();
-}
+ 	i2s::i2s0::tx_mute();
+ 	audio_codec->speaker_disable();
+ }
 
-void speaker_unmute() {
-	i2s::i2s0::tx_unmute();
-	audio_codec->speaker_enable();
-}
-
+ void speaker_unmute() {
+ 	i2s::i2s0::tx_unmute();
+ 	audio_codec->speaker_enable();
+ }
 
 } /* namespace output */
 
@@ -178,18 +178,6 @@ void start() {
 void stop() {
 	i2s::i2s0::rx_stop();
 	audio_codec->microphone_disable();
-}
-
-void internal_start() {
-	//audio_codec->microphone_enable();
-	audio_codec->microphone_internal_enable();
-	i2s::i2s0::rx_start();
-}
-
-void internal_stop() {
-	i2s::i2s0::rx_stop();
-	//audio_codec->microphone_disable();
-	audio_codec->microphone_internal_disable();
 }
 
 } /* namespace input */

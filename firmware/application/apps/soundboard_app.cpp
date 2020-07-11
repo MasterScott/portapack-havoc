@@ -240,6 +240,14 @@ SoundBoardView::SoundBoardView(
 		tx_view.set_transmitting(false);
 		stop();
 	};
+
+	menu_view.on_left = [&nav, this]() {
+		if (!menu_view.highlighted_index()) {
+			//nav.pop();
+		} else {
+			menu_view.set_highlighted(0);
+		}
+	};
 }
 
 SoundBoardView::~SoundBoardView() {

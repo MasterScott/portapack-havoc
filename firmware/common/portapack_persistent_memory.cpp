@@ -218,20 +218,32 @@ void set_playdead_sequence(const uint32_t new_value) {
 	data->playdead_magic = playdead_magic;
 }
 
+bool antenna_bias() {
+	return (data->ui_config & (1 << 25)) ? true : false;
+}
+
+bool speaker_mode() {
+	return (data->ui_config & (1 << 26)) ? true : false;
+}
+
+bool config_speaker() {
+	return (data->ui_config & (1 << 27)) ? true : false;
+}
+
+bool config_backbutton() {
+	return (data->ui_config & (1 << 28)) ? true : false;
+}
+
 bool stealth_mode() {
-	return (data->ui_config & 0x20000000UL) ? true : false;
-}
-
-void set_stealth_mode(const bool v) {
-	data->ui_config = (data->ui_config & ~0x20000000UL) | (v << 29);
-}
-
-bool config_splash() {
-	return (data->ui_config & 0x80000000UL) ? true : false;
+	return (data->ui_config & (1 << 29)) ? true : false;
 }
 
 bool config_login() {
-	return (data->ui_config & 0x40000000UL) ? true : false;
+	return (data->ui_config & (1 << 30)) ? true : false;
+}
+
+bool config_splash() {
+	return (data->ui_config & (1 << 31)) ? true : false;
 }
 
 uint32_t config_backlight_timer() {
@@ -240,12 +252,32 @@ uint32_t config_backlight_timer() {
 	return timer_seconds[data->ui_config & 0x00000007UL];
 }
 
-void set_config_splash(bool v) {
-	data->ui_config = (data->ui_config & ~0x80000000UL) | (v << 31);
+void set_antenna_bias(bool v) {
+	data->ui_config = (data->ui_config & ~(1 << 25)) | (v << 25);
+}
+
+void set_speaker_mode(bool v) {
+	data->ui_config = (data->ui_config & ~(1 << 26)) | (v << 26);
+}
+
+void set_config_speaker(bool v) {
+	data->ui_config = (data->ui_config & ~(1 << 27)) | (v << 27);
+}
+
+void set_config_backbutton(bool v) {
+	data->ui_config = (data->ui_config & ~(1 << 28)) | (v << 28);
+}
+
+void set_stealth_mode(const bool v) {
+	data->ui_config = (data->ui_config & ~(1 << 29)) | (v << 29);
 }
 
 void set_config_login(bool v) {
-	data->ui_config = (data->ui_config & ~0x40000000UL) | (v << 30);
+	data->ui_config = (data->ui_config & ~(1 << 30)) | (v << 30);
+}
+
+void set_config_splash(bool v) {
+	data->ui_config = (data->ui_config & ~(1 << 31)) | (v << 31);
 }
 
 void set_config_backlight_timer(uint32_t i) {

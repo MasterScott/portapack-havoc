@@ -85,10 +85,10 @@ protected:
 	void refresh_list();
 	
 	Labels labels {
-		{ { 0, 0 }, "Current:", Color::light_grey() }
+		{ { 0, 0 }, "Path:", Color::light_grey() }
 	};
 	Text text_current {
-		{ 8 * 8, 0 * 8, 22 * 8, 16 },
+		{ 6 * 8, 0 * 8, 24 * 8, 16 },
 		"",
 	};
 	
@@ -98,7 +98,7 @@ protected:
 	};
 	
 	Button button_exit {
-		{ 16 * 8, 34 * 8, 14 * 8, 32 },
+		{ 16 * 8, 34 * 8, 14 * 8, 4 * 8 },
 		"Exit"
 	};
 };

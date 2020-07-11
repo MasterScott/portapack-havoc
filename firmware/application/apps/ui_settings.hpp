@@ -47,7 +47,7 @@ public:
 
 	void focus() override;
 	
-	std::string title() const override { return "Date/Time"; };
+	std::string title() const override { return "Set Date/Time"; };
 
 private:
 	Labels labels {
@@ -122,7 +122,7 @@ public:
 
 	void focus() override;
 	
-	std::string title() const override { return "Radio"; };
+	std::string title() const override { return "Radio Options"; };
 
 private:
 	const Style style_text {
@@ -191,23 +191,36 @@ public:
 	
 	void focus() override;
 	
-	std::string title() const override { return "UI"; };
+	std::string title() const override { return "UI Options"; };
 	
 private:
-	Checkbox checkbox_login {
+	/*Checkbox checkbox_login {
 		{ 3 * 8, 2 * 16 },
 		20,
 		"Login with play dead"
-	};
+	};*/
 	
-	Checkbox checkbox_bloff {
+	Checkbox checkbox_backbutton {
+		{ 3 * 8, 3 * 16 },
+		19,
+		"Back dots in menues"
+	};
+
+	Checkbox checkbox_speaker {
 		{ 3 * 8, 5 * 16 },
+		20,
+		"Speaker present (H1)"
+	};
+
+
+	Checkbox checkbox_bloff {
+		{ 3 * 8, 7 * 16 },
 		20,
 		"Backlight off after:"
 	};
 
 	OptionsField options_bloff {
-		{ 52, 6 * 16 + 8 },
+		{ 10 * 8, 9 * 16 },
 		10,
 		{
 			{ "5 seconds", 5 },
@@ -221,7 +234,7 @@ private:
 	};
 	
 	Checkbox checkbox_showsplash {
-		{ 3 * 8, 9 * 16 },
+		{ 3 * 8, 11 * 16 },
 		11,
 		"Show splash"
 	};
@@ -238,7 +251,7 @@ public:
 	
 	void focus() override;
 	
-	std::string title() const override { return "Audio"; };
+	std::string title() const override { return "Audio Options"; };
 	
 private:
 	Labels labels {
@@ -259,14 +272,14 @@ private:
 	};
 };
 
-
+/*
 class SetPlayDeadView : public View {
 public:
 	SetPlayDeadView(NavigationView& nav);
 	
 	void focus() override;
 	
-	std::string title() const override { return "Play dead"; };
+	std::string title() const override { return "Playdead settings"; };
 	
 private:
 	bool entermode = false;
@@ -287,7 +300,7 @@ private:
 		{ 128, 192, 96, 24 },
 		"Cancel"
 	};
-};
+};*/
 
 /*class ModInfoView : public View {
 public:
@@ -363,7 +376,7 @@ class SettingsMenuView : public BtnGridView {
 public:
 	SettingsMenuView(NavigationView& nav);
 	
-	std::string title() const override { return "Settings"; };
+	std::string title() const override { return "Options"; };
 };
 
 } /* namespace ui */
