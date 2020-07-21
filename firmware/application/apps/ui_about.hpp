@@ -74,7 +74,7 @@ private:
 	
 	const credits_t credits[26] = {
 		//           012345678901234567890123456789
-		{ 60,		"PortaPack|HAVOC",					0 },
+		{ 60,		"PortaPack | HAVOC",					0 },
 		{ 4 * 8,	    "Version " VERSION_STRING,		16 },
 		{ 11 * 8,	           "Gurus  J. Boone",		0 },
 		{ 18 * 8,	                  "M. Ossmann",		16 },
