@@ -43,8 +43,8 @@ public:
 <<<<<<< HEAD
 	std::string title() const override { return "Signal gen"; };
 =======
-	std::string title() const override { return "Generator"; };
->>>>>>> eried/master
+	std::string title() const override { return "Sig Gen"; };
+>>>>>>> euquiq/master
 
 private:
 	void start_tx();

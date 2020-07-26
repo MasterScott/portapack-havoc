@@ -241,24 +241,16 @@ SetUIView::SetUIView(NavigationView& nav) {
 	add_children({
 		//&checkbox_login,
 		&checkbox_speaker,
-<<<<<<< HEAD
 		&checkbox_backbutton,
-=======
->>>>>>> eried/master
 		&checkbox_bloff,
 		&options_bloff,
 		&checkbox_showsplash,
 		&button_ok
 	});
-<<<<<<< HEAD
 
 	checkbox_backbutton.set_value(persistent_memory::config_backbutton());
 	checkbox_speaker.set_value(persistent_memory::config_speaker());
 
-=======
-	
-	checkbox_speaker.set_value(persistent_memory::config_speaker());
->>>>>>> eried/master
 	checkbox_showsplash.set_value(persistent_memory::config_splash());
 	//checkbox_login.set_value(persistent_memory::config_login());
 	
@@ -274,13 +266,18 @@ SetUIView::SetUIView(NavigationView& nav) {
 	checkbox_speaker.on_select = [this](Checkbox&, bool v) {
 <<<<<<< HEAD
     		if (!v) audio::output::speaker_mute();		//Just mute audio if speaker is disabled
-=======
-    		if (v) audio::output::speaker_mute();		//Just mute audio if speaker is disabled
->>>>>>> eried/master
 
 			persistent_memory::set_config_speaker(v);	//Store Speaker status
 
         StatusRefreshMessage message { };				//Refresh status bar with/out speaker
+=======
+    	if (!v) 
+			audio::output::speaker_mute();			//Just mute audio if speaker is disabled
+
+		persistent_memory::set_config_speaker(v);	//Store Speaker status
+
+        StatusRefreshMessage message { };			//Refresh status bar with/out speaker
+>>>>>>> euquiq/master
         EventDispatcher::send_message(message);
     };
 
@@ -500,30 +497,28 @@ void ModInfoView::focus() {
 }*/
 
 SettingsMenuView::SettingsMenuView(NavigationView& nav) {
+<<<<<<< HEAD
 	if (persistent_memory::config_backbutton()) add_items({
 		{ "..",				ui::Color::light_grey(),&bitmap_icon_previous,	[&nav](){ nav.pop(); } },
 		});
 	add_items({
-<<<<<<< HEAD
-		{ "Audio", 			ui::Color::dark_cyan(), &bitmap_icon_speaker,	[&nav](){ nav.push<SetAudioView>(); } },
-		{ "Radio",			ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<SetRadioView>(); } },
-		{ "UI", 			ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<SetUIView>(); } },
-		//{ "SD card modules", ui::Color::dark_cyan(), [&nav](){ nav.push<ModInfoView>(); } },
-		{ "Date/Time",		ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<SetDateTimeView>(); } },
-		{ "Touch screen",	ui::Color::dark_cyan(), nullptr,	[&nav](){ nav.push<TouchCalibrationView>(); } },
-		//{ "Play dead",		ui::Color::dark_cyan(), &bitmap_icon_playdead,	[&nav](){ nav.push<SetPlayDeadView>(); } }
-=======
 		//{ "..", 			  ui::Color::light_grey(), &bitmap_icon_previous,		  [&nav](){ nav.pop(); } },
 		{ "Audio", 			ui::Color::dark_cyan(), &bitmap_icon_speaker,			[&nav](){ nav.push<SetAudioView>(); } },
+=======
+	if (portapack::persistent_memory::config_backbutton()) add_items({
+		{ "..",				ui::Color::light_grey(),&bitmap_icon_previous,	[&nav](){ nav.pop(); } },
+		});
+	add_items({
+		{ "Audio", 			ui::Color::dark_cyan(), &bitmap_icon_speaker,	[&nav](){ nav.push<SetAudioView>(); } },
+>>>>>>> euquiq/master
 		{ "Radio",			ui::Color::dark_cyan(), &bitmap_icon_options_radio,		[&nav](){ nav.push<SetRadioView>(); } },
 		{ "Interface", 		ui::Color::dark_cyan(), &bitmap_icon_options_ui,		[&nav](){ nav.push<SetUIView>(); } },
 		//{ "SD card modules", ui::Color::dark_cyan(), 								  [&nav](){ nav.push<ModInfoView>(); } },
 		{ "Date/Time",		ui::Color::dark_cyan(), &bitmap_icon_options_datetime,	[&nav](){ nav.push<SetDateTimeView>(); } },
 		{ "Touchscreen",	ui::Color::dark_cyan(), &bitmap_icon_options_touch,		[&nav](){ nav.push<TouchCalibrationView>(); } },
 		//{ "Play dead",	   ui::Color::dark_cyan(), &bitmap_icon_playdead,		  [&nav](){ nav.push<SetPlayDeadView>(); } }
->>>>>>> eried/master
 	});
-	set_max_rows(2); // allow wider buttons
+	set_max_rows(1); // allow wider buttons
 }
 
 } /* namespace ui */

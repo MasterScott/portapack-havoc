@@ -168,6 +168,12 @@ void GeoMap::paint(Painter& painter) {
 		// Cross
 		display.fill_rectangle({ r.center() - Point(16, 1), { 32, 2 } }, Color::red());
 		display.fill_rectangle({ r.center() - Point(1, 16), { 2, 32 } }, Color::red());
+<<<<<<< HEAD
+	} else {
+		draw_bearing(r.center(), angle_, 10, Color::red());
+		//center tag above bearing
+		painter.draw_string(r.center() - Point(((int)tag_.length() * 8 / 2), 2 * 16), style(), tag_);
+=======
 	} else if (angle_ < 360){
 		//if we have a valid angle draw bearing
 		draw_bearing(r.center(), angle_, 10, Color::red());
@@ -180,6 +186,7 @@ void GeoMap::paint(Painter& painter) {
 		//draw a small cross
 		display.fill_rectangle({ r.center() - Point(8, 1), { 16, 2 } }, Color::red());
 		display.fill_rectangle({ r.center() - Point(1, 8), { 2, 16 } }, Color::red());
+>>>>>>> euquiq/master
 	}
 }
 

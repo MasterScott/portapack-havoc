@@ -95,7 +95,7 @@ void BtnGridView::set_parent_rect(const Rect new_parent_rect) {
 	update_items();
 }
 
-void BtnGridView::on_tick_second() {
+void BtnGridView::on_tick_second() { //Blinks MORE ARROW if paginated
 	if (more && blink)
 		arrow_more.set_foreground(Color::white());
 	else
@@ -120,7 +120,7 @@ void BtnGridView::add_items(std::initializer_list<GridItem> new_items) {
 void BtnGridView::update_items() {
 	size_t i = 0;
 
-	if ((menu_items.size()) > (displayed_max + offset)) {
+	if ((menu_items.size()) > (displayed_max + offset)) { //Pagination
 		more = true;
 		blink = true;
 	} else
@@ -215,6 +215,26 @@ bool BtnGridView::on_key(const KeyEvent key) {
 
 bool BtnGridView::on_encoder(const EncoderEvent event) {
 	return set_highlighted(highlighted_item + event);
+}
+
+bool BtnGridView::on_touch(const TouchEvent event) {
+	size_t i = 0;
+	for(const auto child : children_) {
+		if( child->screen_rect().contains(event.point) ) {
+			switch(event.type) {
+			case TouchEvent::Type::Start:
+				return set_highlighted(i-1);
+			case TouchEvent::Type::End:
+				if( menu_items[highlighted_item].on_select ) 
+					menu_items[highlighted_item].on_select();
+				return true;
+			default:
+				return false;
+			}
+		}
+		i++;
+	}
+	return false;
 }
 
 } /* namespace ui */

@@ -49,7 +49,7 @@ struct AircraftRecentEntry {
 	uint16_t hits { 0 };
 	uint32_t age { 0 };
 	adsb_pos pos { false, 0, 0, 0 };
-	
+	adsb_vel velo { false, 0, 999 };
 	ADSBFrame frame_pos_even { };
 	ADSBFrame frame_pos_odd { };
 	
@@ -85,6 +85,10 @@ struct AircraftRecentEntry {
 			if (abs(frame_pos_even.get_rx_timestamp() - frame_pos_odd.get_rx_timestamp()) < 20)
 				pos = decode_frame_pos(frame_pos_even, frame_pos_odd);
 		}
+	}
+
+	void set_frame_velo(ADSBFrame& frame){
+		velo = decode_frame_velo(frame);
 	}
 	
 	void set_info_string(std::string& new_info_string) {
@@ -136,7 +140,7 @@ public:
 	std::string title() const override { return "Aircraft"; };
 =======
 	std::string title() const override { return "Details"; };
->>>>>>> eried/master
+>>>>>>> euquiq/master
 	
 private:
 	AircraftRecentEntry entry_copy { 0 };
@@ -178,6 +182,12 @@ private:
 		{ 0 * 8, 6 * 16, 30 * 8, 16 },
 		"-"
 	};
+
+	Text text_info2 {
+		{0*8, 7*16, 30*8, 16},
+		"-"
+	};
+
 	Text text_frame_pos_even {
 		{ 0 * 8, 13 * 16, 30 * 8, 16 },
 		"-"

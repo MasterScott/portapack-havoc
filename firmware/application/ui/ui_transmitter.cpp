@@ -105,7 +105,7 @@ void TransmitterView::on_show() {
 	field_frequency.set_value(transmitter_model.tuning_frequency());
 
 	field_gain.set_value(transmitter_model.tx_gain());
-	field_amp.set_value(transmitter_model.rf_amp() ? 14 : 0);
+	field_amp.set_value(transmitter_model.rf_amp() ? 1 : 0); //euquiq: 1 : 0 (1 was 14)
 
 	update_gainlevel_styles();
 }

@@ -107,14 +107,13 @@ SetDateTimeModel SetDateTimeView::form_collect() {
 	};
 }
 
-SetRadioView::SetRadioView(
-	NavigationView& nav
-) {
+SetRadioView::SetRadioView(NavigationView& nav) {
+
 	button_cancel.on_select = [&nav](Button&){
 		nav.pop();
 	};
 
-	const auto reference = clock_manager.get_reference();
+	const auto reference = portapack::clock_manager.get_reference();
 	
 	std::string source_name("---");
 	switch(reference.source) {
@@ -151,21 +150,21 @@ SetRadioView::SetRadioView(
 	});
 
 	SetFrequencyCorrectionModel model {
-		static_cast<int8_t>(persistent_memory::correction_ppb() / 1000)
+		static_cast<int8_t>(portapack::persistent_memory::correction_ppb() / 1000)
 	};
 
 	form_init(model);
 
-	check_bias.set_value(persistent_memory::antenna_bias());
+	check_bias.set_value(portapack::get_antenna_bias());
 	check_bias.on_select = [this](Checkbox&, bool v) {
-		persistent_memory::set_antenna_bias(v);
+		portapack::set_antenna_bias(v);
 		StatusRefreshMessage message { };
 		EventDispatcher::send_message(message);
 	};
 
 	button_done.on_select = [this, &nav](Button&){
 		const auto model = this->form_collect();
-		persistent_memory::set_correction_ppb(model.ppm * 1000);
+		portapack::persistent_memory::set_correction_ppb(model.ppm * 1000);
 		nav.pop();
 	};
 }

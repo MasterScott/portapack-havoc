@@ -2,6 +2,7 @@
 /firmware/application/application.bin
 /CMakeCache.txt
 /Makefile
+/.vscode
 /firmware/Makefile
 /firmware/baseband/Makefile
 /firmware/bootstrap/Makefile
@@ -64,3 +65,4 @@ CMakeFiles/
 # Host OS leftovers
 .DS_Store
 /firmware/CMakeCache.txt
+firmware/.vscode/c_cpp_properties.json

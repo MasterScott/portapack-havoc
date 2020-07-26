@@ -290,7 +290,11 @@ private:
 class DebugPeripheralsMenuView : public BtnGridView {
 public:
 	DebugPeripheralsMenuView(NavigationView& nav);
+<<<<<<< HEAD
 	std::string title() const override { return "Peripherals"; };	
+=======
+		std::string title() const override { return "Peripherals"; };	
+>>>>>>> euquiq/master
 };
 
 class DebugMenuView : public BtnGridView {

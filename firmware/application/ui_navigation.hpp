@@ -119,20 +119,20 @@ private:
 	};
 
 	ImageButton button_back {
-		{ 0, 0 * 16, 14, 16 },
+		{ 2, 0 * 16, 16, 16 },
 		&bitmap_icon_previous,
 		Color::white(),
 		Color::dark_grey()
 	};
 
 	Text title {
-		{ 16, 0, 15 * 8, 1 * 16 },
+		{ 20, 0, 14 * 8, 1 * 16 },
 		default_title,
 	};
 
 	ImageButton button_speaker {
  		{ 17 * 8, 0, 2 * 8, 1 * 16 },
- 		&bitmap_icon_speaker,
+ 		&bitmap_icon_speaker_mute,
  		Color::light_grey(),
  		Color::dark_grey()
  	};

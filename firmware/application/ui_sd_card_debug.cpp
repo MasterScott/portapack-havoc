@@ -59,6 +59,19 @@ public:
 		"OK",
 	};
 
+	std::string ResultStr[10] = {
+ 		"Compare",
+ 		"Read incomplete",
+ 		"Write incomplete",
+ 		"Abort",
+ 		"File Open Read",
+ 		"File Open Write",
+ 		"Heap",
+ 		"Thread",
+ 		"Incomplete",
+ 		"OK",
+ 	};
+
 	struct Stats {
 		halrtcnt_t write_duration_min { 0 };
 		halrtcnt_t write_duration_max { 0 };

@@ -66,6 +66,8 @@ public:
 	void on_blur() override;
 	bool on_key(const KeyEvent event) override;
 	bool on_encoder(const EncoderEvent event) override;
+	bool on_touch(const TouchEvent event) override;	//euquiq (now ontouch is catched in here)
+	//bool on_touchEnd(const TouchEvent event); //euquiq
 
 private:
 	int rows_ { 3 };

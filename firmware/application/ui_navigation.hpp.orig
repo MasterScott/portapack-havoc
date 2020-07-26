@@ -110,10 +110,10 @@ public:
 
 private:
 <<<<<<< HEAD
-	static constexpr auto default_title = "PortaPack|Havoc";
+	static constexpr auto default_title = "PortaPack";
 =======
-	static constexpr auto default_title = "MAYHEM v1.1.1"; // TODO: Move the version somewhere
->>>>>>> eried/master
+	static constexpr auto default_title = "MAYHEM EUQUIQ"; // TODO: Move the version somewhere
+>>>>>>> euquiq/master
 	
 	NavigationView& nav_;
 
@@ -134,7 +134,7 @@ private:
 		{ 16, 0, 15 * 8, 1 * 16 },
 =======
 		{ 20, 0, 14 * 8, 1 * 16 },
->>>>>>> eried/master
+>>>>>>> euquiq/master
 		default_title,
 	};
 
@@ -144,7 +144,7 @@ private:
  		&bitmap_icon_speaker,
 =======
  		&bitmap_icon_speaker_mute,
->>>>>>> eried/master
+>>>>>>> euquiq/master
  		Color::light_grey(),
  		Color::dark_grey()
  	};
@@ -234,7 +234,7 @@ public:
 	ReceiversMenuView(NavigationView& nav);
 	std::string title() const override { return "Receivers"; };
 };
-
+ 
 class TransmittersMenuView : public BtnGridView {
 public:
 	TransmittersMenuView(NavigationView& nav);
