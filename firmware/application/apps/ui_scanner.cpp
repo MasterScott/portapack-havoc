@@ -21,9 +21,6 @@
  */
 
 #include "ui_scanner.hpp"
-#include "portapack_persistent_memory.hpp"
-#include "baseband_api.hpp"
-#include "string_format.hpp"
 
 using namespace portapack;
 
@@ -68,6 +65,12 @@ void ScannerThread::set_freq_del(const uint32_t v) {
 	_freq_del = v;
 }
 
+void ScannerThread::change_scanning_direction() {
+	_fwd = !_fwd;
+	chThdSleepMilliseconds(300);	//Give some pause after reversing scanning direction
+
+}
+
 msg_t ScannerThread::static_fn(void* arg) {
 	auto obj = static_cast<ScannerThread*>(arg);
 	obj->run();
@@ -78,39 +81,49 @@ void ScannerThread::run() {
 	if (frequency_list_.size())	{					//IF THERE IS A FREQUENCY LIST ...	
 		RetuneMessage message { };
 		uint32_t frequency_index = frequency_list_.size();
+		bool restart_scan = false;					//Flag whenever scanning is restarting after a pause
 		while( !chThdShouldTerminate() ) {
-			if (_scanning) 
-			{						//Scanning
+			if (_scanning) {						//Scanning
 				if (_freq_lock == 0) {				//normal scanning (not performing freq_lock)
-					frequency_index++;
-					if (frequency_index >= frequency_list_.size())
-						frequency_index = 0;		
-					receiver_model.set_tuning_frequency(frequency_list_[frequency_index]);	// Retune
-				}
+					if (!restart_scan) {			//looping at full speed
+						if (_fwd) {					//forward
+							frequency_index++;
+							if (frequency_index >= frequency_list_.size())
+								frequency_index = 0;	
+
+						} else {					//reverse
+							if (frequency_index < 1)
+								frequency_index = frequency_list_.size();	
+							frequency_index--;
+						}
+						receiver_model.set_tuning_frequency(frequency_list_[frequency_index]);	// Retune
+					}
+					else
+						restart_scan=false;			//Effectively skipping first retuning, giving system time
+				} 
 				message.range = frequency_index;	//Inform freq (for coloring purposes also!)
 				EventDispatcher::send_message(message);
 			} 
-			else 
-			{ 									//If not scanning, check for user asking to delete a freq:
-				if (_freq_del != 0) {			//There is a frequency to delete
+			else {									//NOT scanning 									
+				if (_freq_del != 0) {				//There is a frequency to delete
 					for (uint16_t i = 0; i < frequency_list_.size(); i++) {	//Search for the freq to delete
 						if (frequency_list_[i] == _freq_del) 
-						{						//found: Erase it
+						{							//found: Erase it
 							frequency_list_.erase(frequency_list_.begin() + i);
-							if (i==0)			//set scan index one place back to compensate
+							if (i==0)				//set scan index one place back to compensate
 								i=frequency_list_.size();
 							else
 								i--;
-							
 							break;
 						}
 					}
-					_freq_del = 0;		//deleted.
+					_freq_del = 0;					//deleted.
 				}
-
+				else {
+					restart_scan=true;					//Flag the need for skipping a cycle when restarting scan
+				}
 			}
-			chThdSleepMilliseconds(60);		//This value on 50, when scan resume, it does not stabilize for the next freq in list, it jumped one more ahead. 
-			//With 100 it worked fine but scanner is slow. This may need fixing 
+			chThdSleepMilliseconds(50);				//Needed to (eventually) stabilize the receiver into new freq
 		}
 	}
 }
@@ -123,11 +136,11 @@ void ScannerView::handle_retune(uint32_t i) {
 		current_index = i;		//since it is an ongoing scan, this is a new index
 		if (description_list[current_index].size() > 0) desc_cycle.set( description_list[current_index] );	//Show new description	
 		break;
-	case 1:
-		big_display.set_style(&style_yellow);	//STARTING LOCK FREQ
+	case 1:										//STARTING LOCK FREQ
+		big_display.set_style(&style_yellow);
 		break;
-	case MAX_FREQ_LOCK:
-		big_display.set_style(&style_green);	//FREQ LOCK FULL, GREEN!
+	case MAX_FREQ_LOCK:							//FREQ IS STRONG: GREEN and scanner will pause when on_statistics_update()
+		big_display.set_style(&style_green);
 		break;
 	default:	//freq lock is checking the signal, do not update display
 		return;
@@ -146,10 +159,14 @@ ScannerView::~ScannerView() {
 }
 
 void ScannerView::show_max() {		//show total number of freqs to scan
-	if (frequency_list.size() == MAX_DB_ENTRY)
+	if (frequency_list.size() == MAX_DB_ENTRY) {
+		text_max.set_style(&style_red);
 		text_max.set( "/ " + to_string_dec_uint(MAX_DB_ENTRY) + " (DB MAX!)");
-	else
+	}
+	else {
+		text_max.set_style(&style_grey);
 		text_max.set( "/ " + to_string_dec_uint(frequency_list.size()));
+	}
 }
 
 ScannerView::ScannerView(
@@ -176,15 +193,16 @@ ScannerView::ScannerView(
 		&step_mode,
 		&button_manual_scan,
 		&button_pause,
+		&button_dir,
 		&button_audio_app,
-		&button_remove,
-		&button_mic_app
+		&button_mic_app,
+		&button_add,
+		&button_remove
+
 	});
 
 	def_step = change_mode(AM);	//Start on AM
 	field_mode.set_by_value(AM);	//Reflect the mode into the manual selector
-
-	big_display.set_style(&style_grey);	//Start with gray color
 
 	//HELPER: Pre-setting a manual range, based on stored frequency
 	rf::Frequency stored_freq = persistent_memory::tuned_frequency();
@@ -220,16 +238,12 @@ ScannerView::ScannerView(
 	};
 
 	button_audio_app.on_select = [this](Button&) {
-		//if (scan_thread->is_scanning())
-		// 	scan_thread->set_scanning(false);
 		scan_thread->stop();
 		nav_.pop();
 		nav_.push<AnalogAudioView>();
 	};
 
-		button_mic_app.on_select = [this](Button&) {
-		//if (scan_thread->is_scanning())
-		// 	scan_thread->set_scanning(false);
+	button_mic_app.on_select = [this](Button&) {
 		scan_thread->stop();
 		nav_.pop();
 		nav_.push<MicTXView>();
@@ -243,8 +257,7 @@ ScannerView::ScannerView(
 			description_list.erase(description_list.begin() + current_index);
 			frequency_list.erase(frequency_list.begin() + current_index);
 			show_max();								//UPDATE new list size on screen
-			chThdSleepMilliseconds(300);			//"debouncing" pause so user take finger off 
-			timer = wait * 10;						//Unlock timer pause on_statistics_update
+			desc_cycle.set(" ");					//Clean up description (cosmetic detail)
 			scan_thread->set_freq_lock(0); 			//Reset the scanner lock
 			if ( userpause ) 						//If user-paused, resume
 				user_resume();
@@ -284,22 +297,64 @@ ScannerView::ScannerView(
 	};
 
 	field_mode.on_change = [this](size_t, OptionsField::value_t v) {
-		if (scan_thread->is_scanning())
-			scan_thread->set_scanning(false); 	//STOP SCANNING
-		audio::output::stop();
-		scan_thread->stop();
 		receiver_model.disable();
 		baseband::shutdown();
-		chThdSleepMilliseconds(50);
 		change_mode(v);
+		if ( !scan_thread->is_scanning() ) 						//for some motive, audio output gets stopped.
+			audio::output::start();								//So if scan was stopped we resume audio
+		receiver_model.enable(); 
+	};
+
+	button_dir.on_select = [this](Button&) {
+		scan_thread->change_scanning_direction();
 		if ( userpause ) 						//If user-paused, resume
 			user_resume();
-		start_scan_thread();
+		big_display.set_style(&style_grey);		//Back to grey color
+	};
+
+	button_add.on_select = [this](Button&) {  //frequency_list[current_index]
+		File scanner_file;
+		auto result = scanner_file.open("FREQMAN/SCANNER.TXT");	//First search if freq is already in txt
+		if (!result.is_valid()) {
+			std::string frequency_to_add = "f=" 
+				+ to_string_dec_uint(frequency_list[current_index] / 1000) 
+				+ to_string_dec_uint(frequency_list[current_index] % 1000UL, 3, '0');
+			char one_char[1];		//Read it char by char
+			std::string line;		//and put read line in here
+			bool found=false;
+			for (size_t pointer=0; pointer < scanner_file.size();pointer++) {
+
+				scanner_file.seek(pointer);
+				scanner_file.read(one_char, 1);
+				if ((int)one_char[0] > 31) {			//ascii space upwards
+					line += one_char[0];				//Add it to the textline
+				}
+				else if (one_char[0] == '\n') {			//New Line
+					if (line.compare(0, frequency_to_add.size(),frequency_to_add) == 0) {
+						found=true;
+						break;
+					}
+					line.clear();						//Ready for next textline
+				}
+			}
+			if (found) {
+				nav_.display_modal("Error", "Frequency already exists");
+				big_display.set(frequency_list[current_index]);		//After showing an error
+			}
+			else {
+				auto result = scanner_file.append("FREQMAN/SCANNER.TXT"); //Second: append if it is not there
+				scanner_file.write_line(frequency_to_add + ",d=ADD FQ");
+			}
+		} else
+		{
+			nav_.display_modal("Error", "Cannot open SCANNER.TXT\nfor appending freq.");
+			big_display.set(frequency_list[current_index]);		//After showing an error
+		}
 	};
 
 	//PRE-CONFIGURATION:
 	field_wait.on_change = [this](int32_t v) {	wait = v;	}; 	field_wait.set_value(5);
-	field_squelch.on_change = [this](int32_t v) {	squelch = v;	}; 	field_squelch.set_value(30);
+	field_squelch.on_change = [this](int32_t v) {	squelch = v;	}; 	field_squelch.set_value(-10);
 	field_volume.set_value((receiver_model.headphone_volume() - audio::headphone::volume_range().max).decibel() + 99);
 	field_volume.on_change = [this](int32_t v) { this->on_headphone_volume_changed(v);	};
 	// LEARN FREQUENCIES
@@ -350,16 +405,16 @@ ScannerView::ScannerView(
 }
 
 void ScannerView::on_statistics_update(const ChannelStatistics& statistics) {
-	if ( !userpause ) 
+	if ( !userpause ) 									//Scanning not user-paused
 	{
 		if (timer >= (wait * 10) ) 
 		{
-			timer=0;
+			timer = 0;
 			scan_resume();
 		} 
 		else if (!timer) 
 		{
-			if (statistics.max_db > -squelch) {  		//There is something on the air...
+			if (statistics.max_db > squelch ) {  		//There is something on the air...(statistics.max_db > -squelch) 
 				if (scan_thread->is_freq_lock() >= MAX_FREQ_LOCK) { //checking time reached
 					scan_pause();
 					timer++;	
@@ -396,7 +451,7 @@ void ScannerView::scan_resume() {
 }
 
 void ScannerView::user_resume() {
-	timer = wait * 10;					//Unlock timer pause on_statistics_update ( will trigger a scan_resume() )
+	timer = wait * 10;					//Will trigger a scan_resume() on_statistics_update, also advancing to next freq.
 	button_pause.set_text("PAUSE");		//Show button for pause
 	userpause=false;					//Resume scanning
 }
@@ -453,7 +508,6 @@ size_t ScannerView::change_mode(uint8_t new_mod) { //Before this, do a scan_thre
 	}
 
 	return mod_step[new_mod];
-
 }
 
 void ScannerView::start_scan_thread() {

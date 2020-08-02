@@ -212,7 +212,7 @@ private:
 		TouchDetected,
 	};
 
-	static constexpr float r_touch_threshold = 280;  //was 640 euquiq
+	static constexpr float r_touch_threshold = 480;  //was 640 euquiq
 	static constexpr size_t touch_count_threshold { 3 };
 	static constexpr uint32_t touch_stable_bound { 8 };
 

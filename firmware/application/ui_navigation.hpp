@@ -143,13 +143,6 @@ private:
 		Color::light_grey(),
 		Color::dark_grey()
 	};
-	
-	/*ImageButton button_textentry {
-		{ 170, 0, 2 * 8, 1 * 16 },
-		&bitmap_icon_unistroke,
-		Color::white(),
-		Color::dark_grey()
-	};*/
 
 	ImageButton button_camera {
 		{ 21 * 8, 0, 2 * 8, 1 * 16 },
@@ -186,7 +179,6 @@ private:
 	void on_speaker();
 	void on_stealth();
 	void on_bias_tee();
-	//void on_textentry();
 	void on_camera();
 	void refresh();
 	
@@ -256,24 +248,6 @@ private:
 	NavigationView navigation_view { };
 	Context& context_;
 };
-
-/*class NotImplementedView : public View {
-public:
-	NotImplementedView(NavigationView& nav);
-
-	void focus() override;
-
-private:
-	Text text_title {
-		{ 5 * 8, 7 * 16, 19 * 8, 16 },
-		"Not Yet Implemented"
-	};
-
-	Button button_done {
-		{ 10 * 8, 13 * 16, 10 * 8, 24 },
-		"Bummer",
-	};
-};*/
 
 class ModalMessageView : public View {
 public:

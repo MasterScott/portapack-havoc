@@ -30,6 +30,7 @@
 #include "transmitter_model.hpp"
 #include "tone_key.hpp"
 #include "message.hpp"
+#include "receiver_model.hpp"
 
 namespace ui {
 
@@ -66,10 +67,15 @@ private:
 	void on_tuning_frequency_changed(rf::Frequency f);
 	void on_tx_progress(const bool done);
 	void configure_baseband();
+
+	void rxaudio_on();
+	void rxaudio_off();
+	void on_headphone_volume_changed(int32_t v);
 	
 	bool transmitting { false };
 	bool va_enabled { };
-	bool rogerbeep_enabled { };
+	bool rogerbeep_enabled { false };
+	bool rx_enabled { false };
 	uint32_t tone_key_index { };
 	float mic_gain { 1.0 };
 	uint32_t audio_level { 0 };
@@ -86,7 +92,8 @@ private:
 		{ { 9 * 8, 13 * 8 }, "Level:   /255", Color::light_grey() },
 		{ { 9 * 8, 15 * 8 }, "Attack:   ms", Color::light_grey() },
 		{ { 9 * 8, 17 * 8 }, "Decay:    ms", Color::light_grey() },
-		{ { 7 * 8, 21 * 8 }, "Tone key:", Color::light_grey() }
+		{ { 7 * 8, 21 * 8 }, "Tone key:", Color::light_grey() },
+		{ { 10 * 8, 32 * 8 }, "VOL:", Color::light_grey() }
 	};
 	
 	VuMeter vumeter {
@@ -158,9 +165,24 @@ private:
 		"Roger beep",
 		false
 	};
+
+	Checkbox check_rxactive {
+		{ 7 * 8, 29 * 8 },
+		8,
+		"RX audio",
+		false
+	};
+
+	NumberField field_volume {
+		{ 14 * 8, 32 * 8 },
+		2,
+		{ 0, 99 },
+		1,
+		' ',
+	};
 	
 	Text text_ptt {
-		{ 7 * 8, 17 * 16, 16 * 8, 16 },
+		{ 7 * 8, 35 * 8, 16 * 8, 16 },
 		"PTT: RIGHT BUTTON"
 	};
 	

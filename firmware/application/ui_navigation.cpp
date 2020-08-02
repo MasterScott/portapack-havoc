@@ -50,7 +50,6 @@
 #include "ui_morse.hpp"
 //#include "ui_numbers.hpp"
 //#include "ui_nuoptix.hpp"
-//#include "ui_playdead.hpp"
 #include "ui_pocsag_tx.hpp"
 #include "ui_rds.hpp"
 #include "ui_remote.hpp"
@@ -108,7 +107,6 @@ SystemStatusView::SystemStatusView(
 		&title,
 		&button_speaker,
 		&button_stealth,
-		//&button_textentry,
 		&button_camera,
 		&button_sleep,
 		&button_bias_tee,
@@ -158,10 +156,6 @@ SystemStatusView::SystemStatusView(
 	button_bias_tee.on_select = [this](ImageButton&) {
 		this->on_bias_tee();
 	};
-	
-	/*button_textentry.on_select = [this](ImageButton&) {
-		this->on_textentry();
-	};*/
 
 	button_camera.on_select = [this](ImageButton&) {
 		this->on_camera();
@@ -248,18 +242,6 @@ void SystemStatusView::on_bias_tee() {
 		refresh();
 	}
 }
-
-/*void SystemStatusView::on_textentry() {
-	uint8_t cfg;
-	
-	cfg = portapack::persistent_memory::ui_config_textentry();
-	portapack::persistent_memory::set_config_textentry(cfg ^ 1);
-	
-	if (!cfg)
-		button_textentry.set_bitmap(&bitmap_icon_unistroke);
-	else
-		button_textentry.set_bitmap(&bitmap_icon_keyboard);
-}*/
 
 void SystemStatusView::on_camera() {
 	auto path = next_filename_stem_matching_pattern(u"SCR_????");
@@ -385,7 +367,7 @@ ReceiversMenuView::ReceiversMenuView(NavigationView& nav) {
 		{ "ADS-B", 		ui::Color::green(),		&bitmap_icon_adsb,		[&nav](){ nav.push<ADSBRxView>(); }, },
 		{ "ACARS", 		ui::Color::yellow(),	&bitmap_icon_adsb,		[&nav](){ nav.push<ACARSAppView>(); }, },
 		{ "AIS Boats",	ui::Color::green(),		&bitmap_icon_ais,		[&nav](){ nav.push<AISAppView>(); } },
-		{ "AFSK", 		ui::Color::yellow(),	&bitmap_icon_modem,	[&nav](){ nav.push<AFSKRxView>(); } },
+		{ "AFSK", 		ui::Color::yellow(),	&bitmap_icon_modem,		[&nav](){ nav.push<AFSKRxView>(); } },
 		{ "BTLE",		ui::Color::yellow(),	&bitmap_icon_btle,		[&nav](){ nav.push<BTLERxView>(); } },
 		{ "NRF", 		ui::Color::yellow(),	&bitmap_icon_nrf,		[&nav](){ nav.push<NRFRxView>(); } }, 
 		{ "Audio", 		ui::Color::green(),		&bitmap_icon_speaker,	[&nav](){ nav.push<AnalogAudioView>(); } },
@@ -447,7 +429,7 @@ UtilitiesMenuView::UtilitiesMenuView(NavigationView& nav) {
 /* SystemMenuView ********************************************************/
 
 void SystemMenuView::hackrf_mode(NavigationView& nav) {
-	nav.push<ModalMessageView>("HackRF mode", " This mode enables HackRF\n functionality. To return,\n  press the reset button.\n\n  Switch to HackRF mode?", YESNO,
+	nav.push<ModalMessageView>("HackRF mode", "This mode enables HackRF\n functionality. To return,\n  press the reset button.\n\n  Switch to HackRF mode?", YESNO,
 		[this](bool choice) {
 			if (choice) {
 				EventDispatcher::request_stop();
@@ -458,21 +440,20 @@ void SystemMenuView::hackrf_mode(NavigationView& nav) {
 
 SystemMenuView::SystemMenuView(NavigationView& nav) {
 	add_items({
-		//{ "Play dead",				ui::Color::red(),		&bitmap_icon_playdead,	[&nav](){ nav.push<PlayDeadView>(); } },
-		{ "Receive", 	ui::Color::green(),		&bitmap_icon_receivers,	[&nav](){ nav.push<ReceiversMenuView>(); } },
-		{ "Transmit", 	ui::Color::red(),			&bitmap_icon_transmit,	[&nav](){ nav.push<TransmittersMenuView>(); } },
+		//{ "Play dead",ui::Color::red(),			&bitmap_icon_playdead,	[&nav](){ nav.push<PlayDeadView>(); } },
+		{ "Receive", 	ui::Color::cyan(),			&bitmap_icon_receivers,	[&nav](){ nav.push<ReceiversMenuView>(); } },
+		{ "Transmit", 	ui::Color::cyan(),			&bitmap_icon_transmit,	[&nav](){ nav.push<TransmittersMenuView>(); } },
 		{ "Capture",	ui::Color::red(),			&bitmap_icon_capture,	[&nav](){ nav.push<CaptureAppView>(); } },
-		{ "Replay",		ui::Color::green(),		&bitmap_icon_replay,	[&nav](){ nav.push<ReplayAppView>(); } },
-		{ "Calls",		ui::Color::yellow(),	    &bitmap_icon_search,	[&nav](){ nav.push<SearchView>(); } },
+		{ "Replay",	ui::Color::green(),		&bitmap_icon_replay,	[&nav](){ nav.push<ReplayAppView>(); } },
+		{ "Calls",	ui::Color::yellow(),	    &bitmap_icon_search,	[&nav](){ nav.push<SearchView>(); } },
 		{ "Scanner",	ui::Color::yellow(),		&bitmap_icon_scanner,	[&nav](){ nav.push<ScannerView>(); } },
-		{ "Tools",		ui::Color::cyan(),	&bitmap_icon_utilities,	[&nav](){ nav.push<UtilitiesMenuView>(); } },
+		{ "Tools",	ui::Color::cyan(),	&bitmap_icon_utilities,	[&nav](){ nav.push<UtilitiesMenuView>(); } },
 		{ "Options", 	ui::Color::cyan(),			&bitmap_icon_setup,	  	[&nav](){ nav.push<SettingsMenuView>(); } },
-		{ "Debug",		ui::Color::light_grey(),	&bitmap_icon_debug,   	[&nav](){ nav.push<DebugMenuView>(); } },
+		{ "Debug",	ui::Color::light_grey(),	&bitmap_icon_debug,   	[&nav](){ nav.push<DebugMenuView>(); } },
 		{ "HackRF", 	ui::Color::cyan(),			&bitmap_icon_hackrf,	[this, &nav](){ hackrf_mode(nav); } },
-		{ "About", 		ui::Color::cyan(),			nullptr,				[&nav](){ nav.push<AboutView>(); } }
+		//{ "About", 	ui::Color::cyan(),			nullptr,				[&nav](){ nav.push<AboutView>(); } }
 	});
-	set_max_rows(2); // allow wider buttons
-	//set_highlighted(1);		// Startup selection
+	set_max_rows(2); 	// allow wider buttons
 }
 
 /* SystemView ************************************************************/
@@ -511,23 +492,11 @@ SystemView::SystemView(
 		this->status_view.set_back_enabled(!this->navigation_view.is_top());
 		this->status_view.set_title(new_view.title());
 	};
-
-	// portapack::persistent_memory::set_playdead_sequence(0x8D1);
-				
-	// Initial view
-	/*if ((portapack::persistent_memory::playing_dead() == 0x5920C1DF) ||		// Enable code
-		(portapack::persistent_memory::ui_config() & 16)) {					// Login option
-		navigation_view.push<PlayDeadView>();
-	} else {*/
 	
-		navigation_view.push<SystemMenuView>();
+	navigation_view.push<SystemMenuView>();
 		
-		if (portapack::persistent_memory::config_splash())
-			navigation_view.push<BMPView>();
-		//else
-		//	navigation_view.push<SystemMenuView>();
-			
-	//}
+	if (portapack::persistent_memory::config_splash())
+		navigation_view.push<BMPView>();
 }
 
 Context& SystemView::context() const {
@@ -553,23 +522,6 @@ BMPView::BMPView(NavigationView& nav) {
 void BMPView::paint(Painter&) {
 	portapack::display.drawBMP({(240 - 230) / 2, (320 - 50) / 2 - 10}, splash_bmp, false);
 }
-
-/* NotImplementedView ****************************************************/
-
-/*NotImplementedView::NotImplementedView(NavigationView& nav) {
-	button_done.on_select = [&nav](Button&){
-		nav.pop();
-	};
-
-	add_children({
-		&text_title,
-		&button_done,
-	});
-}
-
-void NotImplementedView::focus() {
-	button_done.focus();
-}*/
 
 /* ModalMessageView ******************************************************/
 

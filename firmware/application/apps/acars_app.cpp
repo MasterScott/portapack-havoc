@@ -114,23 +114,15 @@ void ACARSAppView::focus() {
 
 void ACARSAppView::on_packet(const acars::Packet& packet) {
 	std::string console_info;
-	
-	/*if (!packet.is_valid()) {
+	if (!packet.is_valid()) {
 		console_info = to_string_datetime(packet.received_at(), HMS);
-		console_info += " INVALID";
-		
-		console.writeln(console_info);
+		console_info += " INVALID";		
 	} else {
-		console_info = to_string_datetime(packet.received_at(), HMS);
-		console_info += ":" + to_string_bin(packet.read(0, 32), 32);
-		//console_info += " REG:" + packet.registration_number();
-		
-		console.writeln(console_info);
-	}*/
-	
-	packet_counter++;
-	if (packet_counter % 10 == 0)
-		console.writeln("Block #" + to_string_dec_uint(packet_counter));
+		//console_info = to_string_datetime(packet.received_at(), HMS) + ":";
+		console_info += to_string_bin(packet.read(0, 32), 32);
+		console_info += " REG:" + packet.registration_number();
+	}
+	console.writeln(console_info);
 	
 	// Log raw data whatever it contains
 	if (logger && logging)
