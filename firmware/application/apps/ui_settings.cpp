@@ -155,9 +155,9 @@ SetRadioView::SetRadioView(NavigationView& nav) {
 
 	form_init(model);
 
-	check_bias.set_value(portapack::get_antenna_bias());
+	check_bias.set_value(persistent_memory::antenna_bias());
 	check_bias.on_select = [this](Checkbox&, bool v) {
-		portapack::set_antenna_bias(v);
+		persistent_memory::set_antenna_bias(v);
 		StatusRefreshMessage message { };
 		EventDispatcher::send_message(message);
 	};

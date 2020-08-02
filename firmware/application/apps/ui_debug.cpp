@@ -342,7 +342,7 @@ DebugPeripheralsMenuView::DebugPeripheralsMenuView(NavigationView& nav) {
 			[](const size_t register_number) { return audio::debug::reg_read(register_number); }
 		); } },
 	});
-	on_left = [&nav](){ nav.pop(); };
+	set_max_rows(2);
 }
 
 /* DebugMenuView *********************************************************/
