@@ -212,13 +212,13 @@ private:
 class ReceiversMenuView : public BtnGridView {
 public:
 	ReceiversMenuView(NavigationView& nav);
-	std::string title() const override { return "Receivers"; };
+	std::string title() const override { return "RX"; };
 };
 
 class TransmittersMenuView : public BtnGridView {
 public:
 	TransmittersMenuView(NavigationView& nav);
-	std::string title() const override { return "Transmitters"; };
+	std::string title() const override { return "TX"; };
 };
 
 class UtilitiesMenuView : public BtnGridView {

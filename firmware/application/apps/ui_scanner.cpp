@@ -358,7 +358,7 @@ ScannerView::ScannerView(
 	field_volume.set_value((receiver_model.headphone_volume() - audio::headphone::volume_range().max).decibel() + 99);
 	field_volume.on_change = [this](int32_t v) { this->on_headphone_volume_changed(v);	};
 	// LEARN FREQUENCIES
-	std::string scanner_txt = "SCANNER";
+	std::string scanner_txt = "Scanner";
 	if ( load_freqman_file(scanner_txt, database)  ) {
 		for(auto& entry : database) {									// READ LINE PER LINE
 			if (frequency_list.size() < MAX_DB_ENTRY) {					//We got space!
